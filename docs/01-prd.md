@@ -10,16 +10,17 @@
 - Owner / Author: **Jee Won Jung**
 
 ### 1.2 Version History
-| No. | Author | Revision Details | Version | Date |
-|---:|---|---|---:|---|
-| 1 | Jee Won Jung | Initiation of PRD details | 1.0 | 2026-01-06 |
+| No. | Author | Revision Details          | Version | Date       |
+|----:|---|---------------------------|---:|------------|
+|   1 | Jee Won Jung | Initiation of PRD details | 1.0 | 2026-01-06 |
+|   2 | Jee Won Jung | Editing of PRD            | 1.0 | 2026-01-17 |
 
 ### 1.3 Authors & Stakeholders
 - Author: Jee Won Jung
 - Stakeholders: Client (average gym goer)
 
 ### 1.4 Status
-- Status: **Draft** (as of 2026-01-06)
+- Status: **Draft** (as of 2026-01-17)
 - Approval date: 2026-01-06
 - Approver: Jee Won Jung
 
@@ -33,10 +34,16 @@
 ## 2. Executive Summary
 
 ### 2.1 One-line Summary
-Tempo is a lightweight, offline-first Android workout tracker that helps gym goers plan workout templates, log sets/reps/weights during training, and view history + progression through simple home metrics and charts—without subscriptions or unnecessary complexity.
+Tempo is a lightweight, offline-first Android workout tracker that 
+helps gym goers plan workout templates, log sets/reps/weights during training, 
+and view history + progression through simple home metrics and charts—without 
+subscriptions or unnecessary complexity.
 
 ### 2.2 Background / Context
-Many workout apps prioritize monetization (subscriptions) and ship bloated feature sets that slow down logging and confuse users. Tempo focuses on the core behaviors that matter during training: planning, fast logging, reliable history, calendar visibility, and clear progression signals.
+Many workout apps prioritize monetization (subscriptions) and ship bloated 
+feature sets that slow down logging and confuse users. Tempo focuses on the 
+core behaviors that matter during training: planning, fast logging, reliable 
+history, calendar visibility, and clear progression signals.
 
 ### 2.3 Problem Statement
 Current workout apps often:
@@ -44,7 +51,8 @@ Current workout apps often:
 - Limit customization/variety by forcing preset structures
 - Add complexity that creates friction during workouts
 
-Tempo solves this by providing a streamlined and customizable experience that works fully offline for v1.0.
+Tempo solves this by providing a streamlined and customizable experience 
+that works fully offline for v1.0.
 
 ### 2.4 Goals (v1.0)
 1. Workout planning
@@ -56,7 +64,8 @@ Tempo solves this by providing a streamlined and customizable experience that wo
 3. Home dashboard clarity
     - At-a-glance metrics + calendar overview of planned vs completed vs rest
 4. Progress & analytics
-    - Simple progression indicators per workout type/muscle group (weight trends, volume trends, PR markers where applicable)
+    - Simple progression indicators per workout type/muscle group 
+   (weight trends, volume trends, PR markers where applicable)
 
 ### 2.5 Non-goals / Out of Scope (v1.0)
 - Social feed / social media integrations
