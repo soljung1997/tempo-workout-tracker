@@ -1,42 +1,24 @@
 # Tempo — Data Model
 
-## Entities (draft)
+## 1. Purpose/Scope
+- This document stores data schematics for tempo v.1
+- Source of Truth: SQLite
 
-### WorkoutPlan
-- id (PK)
-- name
-- createdAt / updatedAt
+## 2. Glossary
+| Term | Description |
+|:----:|:------------|
+|      |             |
+|      |             |
+|      |             |
+|      |             |
+|      |             |
 
-### PlanExercise
-- id (PK)
-- planId (FK → WorkoutPlan)
-- name (or exerciseId if using an exercise library)
-- orderIndex
-- defaultSets (optional)
-- defaultReps (optional)
-- notes (optional)
+## 3. Entities (draft)
 
-### WorkoutSession
-- id (PK)
-- planId (nullable FK)
-- startedAt
-- finishedAt (nullable until completed)
-- title (optional snapshot name)
-
-### SetLog
-- id (PK)
-- sessionId (FK → WorkoutSession)
-- exerciseName (snapshot) or planExerciseId (FK)
-- setNumber
-- weight
-- reps
-- rpe (optional)
-- note (optional)
-- createdAt
+### A. 
 
 ## Relationships
-- WorkoutPlan 1..* PlanExercise
-- WorkoutSession 1..* SetLog
+
 
 ## Rules (decide early)
 - Do we snapshot exercise names into SetLog (recommended) so edits to plans don't rewrite history?

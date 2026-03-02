@@ -2,7 +2,7 @@
 
 **Product / Project Name:** Tempo (Android workout tracker)  
 **Owner / Author:** Jee Won Jung  
-**Status:** Draft (2026-01-06)
+**Status:** Rev. 1 (2026-03-02)
 
 ---
 
@@ -23,7 +23,6 @@ Tempo solves this by providing a streamlined and customizable experience that wo
 ## Target Audience
 Gym-goers across experience levels:
 - Beginner → Advanced
-- Users who want structure + consistency + progress tracking with minimal friction
 
 ## Personas (summary)
 - **Beginner (John, 35):** returning to fitness; wants habit consistency and simple tracking.

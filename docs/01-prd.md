@@ -10,24 +10,23 @@
 - Owner / Author: **Jee Won Jung**
 
 ### 1.2 Version History
-| No. | Author | Revision Details          | Version | Date       |
-|----:|---|---------------------------|---:|------------|
-|   1 | Jee Won Jung | Initiation of PRD details | 1.0 | 2026-01-06 |
-|   2 | Jee Won Jung | Editing of PRD            | 1.0 | 2026-01-17 |
+| No. | Author       | Revision Details          | Version | Date       |
+|----:|--------------|---------------------------|--------:|------------|
+|   1 | Jee Won Jung | Initiation of PRD details |     1.0 | 2026-01-06 |
+|   2 | Jee Won Jung | Editing of PRD            |     1.0 | 2026-01-17 |
+|   3 | Jee Won Jung | Editing of PRD            |     1.0 | 2026-03-02 |
 
 ### 1.3 Authors & Stakeholders
 - Author: Jee Won Jung
-- Stakeholders: Client (average gym goer)
+- Stakeholders: Jee Won Jung
 
 ### 1.4 Status
-- Status: **Draft** (as of 2026-01-17)
-- Approval date: 2026-01-06
-- Approver: Jee Won Jung
+- Status: **Version 1.0** (as of 2026-03-02)
 
 ### 1.5 Definitions & Acronyms
 | Term | Definition |
-|---|---|
-| TBD | TBD |
+|------|------------|
+| TBD  | TBD        |
 
 ---
 
@@ -69,7 +68,7 @@ that works fully offline for v1.0.
 
 ### 2.5 Non-goals / Out of Scope (v1.0)
 - Social feed / social media integrations
-- Subscription model or paywalling core tracking features
+- Subscription model or pay-walling core tracking features
 - Nutrition tracking
 - Medical/clinical metrics requiring legal compliance
 - Cloud sync / accounts (explicitly post-MVP)
@@ -93,7 +92,7 @@ that works fully offline for v1.0.
 - Advanced (Sam, 26): programs workouts; wants a free, clean platform for structured routines
 
 ### 3.3 User Needs / Pain Points
-- Useful features in other apps are often paywalled
+- Useful features in other apps are often pay-walled
 - Customization/variety is limited by preset structures
 - Too many features → poor UX and high friction while training
 
@@ -118,11 +117,11 @@ that works fully offline for v1.0.
 ## 4. Success Metrics (v1.0)
 
 ### 4.1 Adoption / Usage
-- 80% of users use a created/premade workout routin within 3 days of downloading the application
+- 80% of users use a created/premade workout routine within 3 days of downloading the application
 - 10,000 users download the application with 60% of users using the application regularly (every 2 days at minimum).
 
 ### 4.2 Efficiency
-- Median time to log a set: **~1 seconds**
+- Median time to log a set: **2-5 seconds**
 - Median time to create a simple workout plan: **~2 minutes**
 
 ### 4.3 Retention
@@ -131,7 +130,7 @@ that works fully offline for v1.0.
 
 ### 4.4 Quality
 - No silent data loss in core flows (Plan → Start/Resume → Log → Finish → History)
-- High crash-free reliability in core flows (target: 0% crashes for MVP since it is version 1.0)
+- High crash-free reliability in core flows (target: 0.1% crashes for MVP since it is version 1.0)
 
 ---
 
@@ -163,47 +162,47 @@ that works fully offline for v1.0.
 - Medical/clinical metrics
 
 ### 5.4 Prioritization (MoSCoW)
-| Feature | Priority | Notes |
-|---|:---:|---|
-| CRUD workout plans | M | Core planning |
-| Workout logging (sets/reps/weights) | M | Core usage |
-| History list + session detail | M | Core tracking |
-| Calendar (planned/completed/rest) | M | Required by home UX |
-| Home metrics (A/B/C) | M | Dashboard value |
-| Basic analytics/graphs | M | Progress visibility |
-| Offline local storage | M | v1.0 constraint |
-| Account + cloud sync | S | Post-MVP |
-| Rest timer + notes | S | Post-MVP |
-| Data export (CSV) | S | Post-MVP |
-| Widgets/notifications | S | Post-MVP |
-| Wearables | C | Later |
-| Sleep/protein logging | C | Later |
-| Social feed | W | Out of scope |
-| Nutrition tracking | W | Out of scope |
-| Medical metrics | W | Out of scope |
+| Feature                             | Priority | Notes               |
+|-------------------------------------|:--------:|---------------------|
+| CRUD workout plans                  |    M     | Core planning       |
+| Workout logging (sets/reps/weights) |    M     | Core usage          |
+| History list + session detail       |    M     | Core tracking       |
+| Calendar (planned/completed/rest)   |    M     | Required by home UX |
+| Home metrics (A/B/C)                |    M     | Dashboard value     |
+| Basic analytics/graphs              |    M     | Progress visibility |
+| Offline local storage               |    M     | v1.0 constraint     |
+| Account + cloud sync                |    S     | Post-MVP            |
+| Rest timer + notes                  |    S     | Post-MVP            |
+| Data export (CSV)                   |    S     | Post-MVP            |
+| Widgets/notifications               |    S     | Post-MVP            |
+| Wearables                           |    C     | Later               |
+| Sleep/protein logging               |    C     | Later               |
+| Social feed                         |    W     | Out of scope        |
+| Nutrition tracking                  |    W     | Out of scope        |
+| Medical metrics                     |    W     | Out of scope        |
 
 ---
 
 ## 6. Requirements
 
 ### 6.1 Feature List Overview (dependencies)
-| Feature | MVP (MoSCoW) | Dependencies |
-|---|:---:|---|
-| CRUD workout plans | M | DB schema, UI screens |
-| Workout type tagging | M | DB schema + UI field |
-| Plan scheduling | M | DB + recurrence rules |
-| Start/Resume lifecycle | M | In-progress session persistence |
-| Workout logging | M | DB CRUD + validation |
-| History list/detail | M | DB read + UI |
-| Home metrics | M | DB reads + calculations + caching |
-| Week/month calendar indicators | M | DB reads + timezone rules |
-| Analytics/graphs | M | DB reads + aggregation logic |
-| Offline storage | M | Room/SQLite; no account |
-| Accounts + cloud sync | S | Online DB + auth |
-| Rest timer + notes | S | Timer + DB update |
-| Data export (CSV) | S | CSV conversion |
-| Widgets/notifications | S | OS integrations + permissions |
-| Wearables | C | Wear OS APIs + permissions |
+| Feature                        | MVP (MoSCoW) | Dependencies                      |
+|--------------------------------|:------------:|-----------------------------------|
+| CRUD workout plans             |      M       | DB schema, UI screens             |
+| Workout type tagging           |      M       | DB schema + UI field              |
+| Plan scheduling                |      M       | DB + recurrence rules             |
+| Start/Resume lifecycle         |      M       | In-progress session persistence   |
+| Workout logging                |      M       | DB CRUD + validation              |
+| History list/detail            |      M       | DB read + UI                      |
+| Home metrics                   |      M       | DB reads + calculations + caching |
+| Week/month calendar indicators |      M       | DB reads + timezone rules         |
+| Analytics/graphs               |      M       | DB reads + aggregation logic      |
+| Offline storage                |      M       | Room/SQLite; no account           |
+| Accounts + cloud sync          |      S       | Online DB + auth                  |
+| Rest timer + notes             |      S       | Timer + DB update                 |
+| Data export (CSV)              |      S       | CSV conversion                    |
+| Widgets/notifications          |      S       | OS integrations + permissions     |
+| Wearables                      |      C       | Wear OS APIs + permissions        |
 
 ### 6.2 Detailed Requirements (per feature / screen)
 
@@ -388,11 +387,11 @@ that works fully offline for v1.0.
 ---
 
 ## 10. Risks & Mitigations
-| Risk | Impact | Likelihood | Mitigation |
-|---|---|---|---|
-| Data loss during workout | High | Medium | Immediate persistence + resume flow + testing |
-| Scope creep (too many features) | High | Medium | Strict MVP list + MoSCoW |
-| Complex calendar/recurrence rules | Medium | Medium | Keep recurrence simple for v1.0; document rules |
+| Risk                              | Impact | Likelihood | Mitigation                                      |
+|-----------------------------------|--------|------------|-------------------------------------------------|
+| Data loss during workout          | High   | Medium     | Immediate persistence + resume flow + testing   |
+| Scope creep (too many features)   | High   | Medium     | Strict MVP list + MoSCoW                        |
+| Complex calendar/recurrence rules | Medium | Medium     | Keep recurrence simple for v1.0; document rules |
 
 ---
 
