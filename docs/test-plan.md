@@ -1,26 +1,54 @@
 # Tempo — Test Plan
 
-## Scope
-Validate the MVP features: plan creation, workout logging, history, and basic analytics.
+## 1. Scope
+Validate the MVP features of Tempo:
+- workout plan creation
+- workout execution/logging
+- workout history
+- basic analytics
 
-## Test types
-### Unit tests
-- Volume calculation
+## 2. Test Types
+
+### A. Unit Tests
+Validate core logic in isolation.
+
+- volume calculation
 - PR detection logic (if implemented)
-- Unit conversion (kg/lb) rules
+- unit conversion rules (kg/lb)
+- date/time formatting helpers
+- workout summary calculations
 
-### Integration tests
-- Room DAO operations (insert/update/delete)
-- Migration tests (when schema changes)
+### B. Integration Tests
+Validate that app layers work correctly together.
 
-### UI / E2E smoke tests (manual is fine for MVP)
-- Create plan → start workout → log sets → finish
-- Kill app mid-session → reopen → continue
-- View history details
-- Analytics screen loads and displays expected aggregates
+- Room DAO operations: insert, update, delete, query
+- session creation from workout plan
+- set logging persistence
+- history retrieval
+- migration tests when schema changes
 
-## Manual release checklist
-- Fresh install works
-- No crashes in core flows
-- Data persists after restart
-- Basic accessibility: readable text, buttons tappable
+### C. UI / E2E Smoke Tests
+Manual testing is acceptable for MVP.
+
+- create plan → start workout → log sets → finish workout
+- start workout from existing plan
+- kill app mid-session → reopen → continue session
+- view workout history details
+- analytics screen loads and displays expected aggregates
+- inactive exercises/plans do not break existing history
+
+## 3. Manual Release Checklist
+Before any MVP build is considered usable:
+
+- fresh install works
+- no crashes in core flows
+- data persists after app restart
+- workout history remains accurate after editing a plan
+- basic accessibility: readable text and tappable buttons
+- basic empty states display correctly
+- no broken navigation between core screens
+
+## 4. Notes
+- For MVP, prioritize correctness of stored workout history over advanced automation.
+- Manual testing is acceptable early on, but repeatable test cases should be added as features stabilize.
+- Migration testing becomes required once the SQLite schema changes after initial implementation.
