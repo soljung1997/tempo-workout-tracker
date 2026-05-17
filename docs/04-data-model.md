@@ -61,9 +61,8 @@ Represents a reusable master exercise definition.
 **Fields**
 - exercise_id (PK)
 - exercise_name
-- category
+- exercise_category
 - muscle_group
-- equipment
 - default_sets
 - default_reps
 - default_weight
@@ -90,7 +89,7 @@ Represents a reusable workout template.
 **Fields**
 - workout_plan_id (PK)
 - user_id (FK → User.user_id)
-- plan_name
+- name
 - description
 - workout_day
 - goal
@@ -148,7 +147,7 @@ Represents one actual workout performed by the user.
 - energy_rating
 - difficulty_rating
 - notes
-- completed
+- status
 - created_at
 - updated_at
 
@@ -168,7 +167,7 @@ Represents one performed exercise inside a workout session.
 - exercise_name_snapshot
 - category_snapshot
 - muscle_group_snapshot
-- exercise_order
+- order_index
 - notes
 - created_at
 - updated_at

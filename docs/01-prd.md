@@ -197,7 +197,7 @@ that works fully offline for v1.0.
 | Home metrics                   |      M       | DB reads + calculations + caching |
 | Week/month calendar indicators |      M       | DB reads + timezone rules         |
 | Analytics/graphs               |      M       | DB reads + aggregation logic      |
-| Offline storage                |      M       | Room/SQLite; no account           |
+| Offline storage                |      M       | SQLite; no account           |
 | Accounts + cloud sync          |      S       | Online DB + auth                  |
 | Rest timer + notes             |      S       | Timer + DB update                 |
 | Data export (CSV)              |      S       | CSV conversion                    |
@@ -372,7 +372,6 @@ that works fully offline for v1.0.
 ## 8. Data & Analytics
 ### 8.1 Data Model (high level)
 - Link: `docs/04-data-model.md`
-- Entities: TBD (Room entities to be finalized)
 
 ### 8.2 Event Tracking / Telemetry
 - TBD (if none for v1.0, explicitly state “none”)
@@ -380,7 +379,7 @@ that works fully offline for v1.0.
 ---
 
 ## 9. Dependencies & Integrations
-- Local database: Room/SQLite (offline-first)
+- Local database: SQLite (offline-first)
 - Android permissions: TBD (only those truly needed)
 - Integrations: TBD (calendar is app-internal unless you integrate with device calendar)
 
