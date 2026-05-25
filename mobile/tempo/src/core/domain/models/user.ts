@@ -5,7 +5,10 @@ export type User = {
     email?: string;
     sex?: "male" | "female" | "intersex" | "preferNotToSay";
     heightCm?: number;
-    birthYear: number;
+    birthYear?: number;
+    isActive: boolean;
+    deletedAt?: string;
+    scheduledHardDeleteAt?: string;
     createdAt: string;
     updatedAt: string;
 };

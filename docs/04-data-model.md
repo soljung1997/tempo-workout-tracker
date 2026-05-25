@@ -60,6 +60,7 @@ Represents a reusable master exercise definition.
 
 **Fields**
 - exercise_id (PK)
+- user_id (FK)
 - exercise_name
 - exercise_category
 - muscle_group
@@ -68,6 +69,7 @@ Represents a reusable master exercise definition.
 - default_weight
 - default_rest_seconds
 - notes
+- is_default
 - is_active
 - created_at
 - updated_at
@@ -200,6 +202,30 @@ Represents one performed set for a session exercise.
 - This is the most important historical performance table.
 - Keep it simple in v1.
 - `rpe` is optional but very useful if you want progression logic later.
+
+### Muscle Group
+
+**Fields**
+- muscle_group_id (PK)
+- user_id (FK → User.user_id)
+- muscle_group_name
+- muscle_group_normalized_name
+- is_default
+- is_active
+- created_at
+- updated_at
+
+
+### Category
+
+**Fields**
+- exercise_category_id (PK)
+- exercise_category_name
+- exercise_category_normalized_name
+- is_default
+- is_active
+- created_at
+- updated_at
 
 ---
 
