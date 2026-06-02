@@ -6,7 +6,7 @@ export type WorkoutPlan = {
     userId: User["id"];
     name: string;
     description?: string;
-    workoutDay?: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
+    workoutDay?: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
     goal?: string;
     isActive: boolean;
     createdAt: string;

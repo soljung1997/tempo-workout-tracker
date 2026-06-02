@@ -8,6 +8,7 @@ export type Exercise = {
     id: number;
     userId?: User["id"];
     name: string;
+    normalizedName: string;
     categoryId: ExerciseCategory["id"];
     muscleGroupId: MuscleGroup["id"];
     defaultSets?: number;

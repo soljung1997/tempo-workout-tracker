@@ -3,13 +3,16 @@ import type { ExerciseCategory } from "../../domain/models/exerciseCategory";
 import type { User } from "../../domain/models/user";
 
 export type CreateExerciseCategoryInput = {
+    userId: User["id"];
     name: string;
+    normalizedName: string;
 };
 //update
 
 export type UpdateExerciseCategoryInput = {
-    exerciseCategoryId: ExerciseCategory["id"];
+    id: ExerciseCategory["id"];
     name?: string;
+    normalizedName?: string;
 };
 
 

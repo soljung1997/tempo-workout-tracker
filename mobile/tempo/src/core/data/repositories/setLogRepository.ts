@@ -4,7 +4,7 @@ import type { SetLog } from "../../domain/models/setLog";
 export type CreateSetLogInput = {
     sessionExerciseId: SessionExercise["id"];
     setNumber: number;
-    repsCompleted: number;
+    repsCompleted?: number;
     weightUsed?: number;
     weightUnit?: "kg" | "lb";
     restSeconds?: number;

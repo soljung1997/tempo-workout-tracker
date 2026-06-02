@@ -4,7 +4,7 @@ export type SetLog = {
     id: number;
     sessionExerciseId: SessionExercise["id"];
     setNumber: number;
-    repsCompleted: number;
+    repsCompleted?: number;
     weightUsed?: number;
     weightUnit?: "kg" | "lb";
     restSeconds?: number;

@@ -1,10 +1,10 @@
 //Extremely similar to category, an Id, name
 
-import { User } from "./user";
+import type { User } from "./user";
 
 export type MuscleGroup = {
     id: number;
-    userId: User["id"];
+    userId?: User["id"];
     name: string;
     normalizedName: string;
     isDefault: boolean;

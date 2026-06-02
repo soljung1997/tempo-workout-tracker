@@ -7,6 +7,7 @@ import type { User } from "../../domain/models/user";
 export type CreateExerciseInput = {
     userId: User["id"];
     name: string;
+    normalizedName: string;
     categoryId: ExerciseCategory["id"];
     muscleGroupId: MuscleGroup["id"];
     defaultSets?: number;
@@ -19,6 +20,7 @@ export type CreateExerciseInput = {
 export type UpdateExerciseInput = {
         id: Exercise["id"];
         name?: string;
+        normalizedName?: string;
         categoryId?: ExerciseCategory["id"];
         muscleGroupId?: MuscleGroup["id"];
         defaultSets?: number;
