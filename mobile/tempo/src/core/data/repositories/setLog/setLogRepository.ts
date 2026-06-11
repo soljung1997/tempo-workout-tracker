@@ -1,5 +1,5 @@
-import type { SessionExercise } from "../../domain/models/sessionExercise";
-import type { SetLog } from "../../domain/models/setLog";
+import type { SessionExercise } from "../../../domain/models/sessionExercise";
+import type { SetLog } from "../../../domain/models/setLog";
 
 export type CreateSetLogInput = {
     sessionExerciseId: SessionExercise["id"];

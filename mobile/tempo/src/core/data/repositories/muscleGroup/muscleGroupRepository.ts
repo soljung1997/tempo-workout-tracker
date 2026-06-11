@@ -1,5 +1,5 @@
-import type { MuscleGroup } from "../../domain/models/muscleGroup";
-import type { User } from "../../domain/models/user";
+import type { MuscleGroup } from "../../../domain/models/muscleGroup";
+import type { User } from "../../../domain/models/user";
 
 export type CreateMuscleGroupInput = {
     userId?: User["id"];

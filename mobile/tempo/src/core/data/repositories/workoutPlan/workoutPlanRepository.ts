@@ -1,7 +1,7 @@
 
 
-import type { User } from "../../domain/models/user";
-import type { WorkoutPlan } from "../../domain/models/workoutPlan";
+import type { User } from "../../../domain/models/user";
+import type { WorkoutPlan } from "../../../domain/models/workoutPlan";
 
 //Create a workout plan input contract
 export type CreateWorkoutPlanInput = {

@@ -1,8 +1,8 @@
 
-import type { Exercise } from "../../domain/models/exercise";
-import type { ExerciseCategory } from "../../domain/models/exerciseCategory";
-import type { MuscleGroup } from "../../domain/models/muscleGroup";
-import type { User } from "../../domain/models/user";
+import type { Exercise } from "../../../domain/models/exercise";
+import type { ExerciseCategory } from "../../../domain/models/exerciseCategory";
+import type { MuscleGroup } from "../../../domain/models/muscleGroup";
+import type { User } from "../../../domain/models/user";
 
 export type CreateExerciseInput = {
     userId: User["id"];

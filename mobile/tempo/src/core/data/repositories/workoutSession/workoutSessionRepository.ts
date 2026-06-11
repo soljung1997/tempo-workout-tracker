@@ -1,6 +1,6 @@
-import type { User } from "../../domain/models/user";
-import type { WorkoutPlan } from "../../domain/models/workoutPlan";
-import type { WorkoutSession } from "../../domain/models/workoutSession";
+import type { User } from "../../../domain/models/user";
+import type { WorkoutPlan } from "../../../domain/models/workoutPlan";
+import type { WorkoutSession } from "../../../domain/models/workoutSession";
 
 export type CreateWorkoutSessionInput = {
     userId: User["id"];

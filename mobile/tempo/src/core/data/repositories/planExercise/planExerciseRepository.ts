@@ -1,6 +1,6 @@
-import type { PlanExercise } from "../../domain/models/planExercise";
-import type { WorkoutPlan } from "../../domain/models/workoutPlan";
-import type { Exercise } from "../../domain/models/exercise";
+import type { PlanExercise } from "../../../domain/models/planExercise";
+import type { WorkoutPlan } from "../../../domain/models/workoutPlan";
+import type { Exercise } from "../../../domain/models/exercise";
 
 export type CreatePlanExerciseInput = {
     workoutPlanId: WorkoutPlan["id"];

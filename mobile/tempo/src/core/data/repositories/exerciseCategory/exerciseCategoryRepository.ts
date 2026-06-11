@@ -1,6 +1,6 @@
 //create
-import type { ExerciseCategory } from "../../domain/models/exerciseCategory";
-import type { User } from "../../domain/models/user";
+import type { ExerciseCategory } from "../../../domain/models/exerciseCategory";
+import type { User } from "../../../domain/models/user";
 
 export type CreateExerciseCategoryInput = {
     userId: User["id"];
