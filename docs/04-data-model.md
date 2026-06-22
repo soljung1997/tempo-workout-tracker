@@ -1,4 +1,4 @@
-# Tempo — Data Model
+# Tempo - Data Model
 
 ## 1. Purpose/Scope
 - This document defines the core data model for Tempo v1.
@@ -82,6 +82,7 @@ Represents a reusable master exercise definition.
 **Notes**
 - This is the library/master record.
 - Defaults are suggestions, not historical truth.
+- Exercise should not be hard-deleted since it is referenced by history, unless user deletes their account.
 
 ---
 
@@ -90,7 +91,7 @@ Represents a reusable workout template.
 
 **Fields**
 - workout_plan_id (PK)
-- user_id (FK → User.user_id)
+- user_id (FK -> User.user_id)
 - name
 - description
 - workout_day
@@ -107,6 +108,7 @@ Represents a reusable workout template.
 **Notes**
 - `workout_day` can be a label like Monday, Day 1, Push, etc.
 - `goal` can store values like hypertrophy, strength, endurance.
+- Should be soft-deleted since it has past sessions.
 
 ---
 
@@ -200,6 +202,7 @@ Represents one performed set for a session exercise.
 
 **Notes**
 - This is the most important historical performance table.
+- `SetLog` is historical performance data.
 - Keep it simple in v1.
 - `rpe` is optional but very useful if you want progression logic later.
 
@@ -304,13 +307,13 @@ For tracking best lifts.
 ### Deletion Rules
 - Do **not** hard-delete an `Exercise` if it is referenced by workout history.
 - Prefer:
-    - `is_active = false`
+    - `is_active = 0`
     - hide from selection lists
     - preserve history
 
 - Do **not** hard-delete a `WorkoutPlan` if it is referenced by past sessions.
 - Prefer:
-    - `is_active = false`
+    - `is_active = 0`
 
 ### Session Creation Rule
 - A `WorkoutSession` may optionally be created from a `WorkoutPlan`.
