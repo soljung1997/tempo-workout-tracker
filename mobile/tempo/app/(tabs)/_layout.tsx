@@ -1,8 +1,18 @@
 import { Tabs } from "expo-router";
+import { globalStyles as styles, theme } from "../../constants/styles";
 
 export default function TabLayout() {
     return (
-        <Tabs>
+        <Tabs
+            screenOptions={{
+                headerStyle: styles.header,
+                headerTitleStyle: styles.headerTitle,
+                headerTintColor: theme.colors.text,
+                tabBarStyle: styles.tabBar,
+                tabBarActiveTintColor: theme.colors.primary,
+                tabBarInactiveTintColor: theme.colors.textMuted,
+            }}
+        >
             <Tabs.Screen
                 name="index"
                 options={{

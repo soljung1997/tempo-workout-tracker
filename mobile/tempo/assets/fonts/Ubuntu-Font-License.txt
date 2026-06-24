@@ -1,0 +1,15 @@
+Ubuntu Font Family Notice
+
+Tempo includes the Ubuntu Font Family.
+
+The Ubuntu Font Family is distributed under the Ubuntu Font Licence, Version 1.0.
+
+Copyright 2010 Canonical Ltd.
+
+Official license text:
+https://canonical.com/legal/font-licence
+
+Official Ubuntu font page:
+https://design.ubuntu.com/font/
+
+The Ubuntu and Canonical names/trademarks belong to Canonical Ltd. This project uses the font files only and does not claim affiliation with Ubuntu or Canonical.

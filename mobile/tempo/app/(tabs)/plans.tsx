@@ -2,7 +2,6 @@ import { Text, View } from "react-native";
 import { globalStyles as styles } from "../../constants/styles";
 
 export default function PlansScreen() {
-  console.log("PlansScreen rendered");
 
   return (
     <View style={styles.screen}>

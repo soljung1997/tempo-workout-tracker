@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { globalStyles as styles } from "../../constants/styles"
+import { globalStyles as styles } from "../../constants/styles";
 
 export default function SettingsScreen() {
     return (

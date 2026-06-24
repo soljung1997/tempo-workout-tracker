@@ -27,6 +27,10 @@ export default function RootLayout() {
 
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Ubuntu: require("../assets/fonts/Ubuntu-R.ttf"),
+    UbuntuLight: require("../assets/fonts/Ubuntu-L.ttf"),
+    UbuntuMedium: require("../assets/fonts/Ubuntu-M.ttf"),
+    UbuntuBold: require("../assets/fonts/Ubuntu-B.ttf"),
     ...FontAwesome.font,
   });
 
