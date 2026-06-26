@@ -41,12 +41,16 @@
 Represents the app owner.
 
 **Fields**
-- user_id (PK)
-- username
-- password_hash
+- user_id
+- display_name
+- google_account_id
 - email
-- age
-- gender
+- sex
+- height_cm
+- birth_year
+- is_active
+- deleted_at
+- scheduled_hard_delete_at
 - created_at
 - updated_at
 
@@ -61,9 +65,10 @@ Represents a reusable master exercise definition.
 **Fields**
 - exercise_id (PK)
 - user_id (FK)
-- exercise_name
-- exercise_category
-- muscle_group
+- name
+- normalized_name
+- category_id
+- muscle_group_id
 - default_sets
 - default_reps
 - default_weight
@@ -117,9 +122,9 @@ Represents one exercise inside a workout plan.
 
 **Fields**
 - plan_exercise_id (PK)
-- workout_plan_id (FK → WorkoutPlan.workout_plan_id)
-- exercise_id (FK → Exercise.exercise_id)
-- exercise_order
+- workout_plan_id (FK -> WorkoutPlan.workout_plan_id)
+- exercise_id (FK -> Exercise.exercise_id)
+- order_index
 - target_sets
 - target_reps
 - target_weight
@@ -141,8 +146,8 @@ Represents one actual workout performed by the user.
 
 **Fields**
 - workout_session_id (PK)
-- user_id (FK → User.user_id)
-- workout_plan_id (FK → WorkoutPlan.workout_plan_id, nullable)
+- user_id (FK -> User.user_id)
+- workout_plan_id (FK -> WorkoutPlan.workout_plan_id, nullable)
 - session_name
 - session_date
 - start_time
@@ -166,11 +171,11 @@ Represents one performed exercise inside a workout session.
 
 **Fields**
 - session_exercise_id (PK)
-- workout_session_id (FK → WorkoutSession.workout_session_id)
-- exercise_id (FK → Exercise.exercise_id, nullable if needed later)
+- workout_session_id (FK -> WorkoutSession.workout_session_id)
+- exercise_id (FK -> Exercise.exercise_id, nullable if needed later)
 - exercise_name_snapshot
-- category_snapshot
-- muscle_group_snapshot
+- category_name_snapshot
+- muscle_group_name_snapshot
 - order_index
 - notes
 - created_at
@@ -188,13 +193,13 @@ Represents one performed set for a session exercise.
 
 **Fields**
 - set_log_id (PK)
-- session_exercise_id (FK → SessionExercise.session_exercise_id)
+- session_exercise_id (FK -> SessionExercise.session_exercise_id)
 - set_number
 - reps_completed
 - weight_used
+- weight_unit
 - rest_seconds
 - rpe
-- is_warmup
 - is_completed
 - notes
 - created_at
@@ -210,9 +215,9 @@ Represents one performed set for a session exercise.
 
 **Fields**
 - muscle_group_id (PK)
-- user_id (FK → User.user_id)
-- muscle_group_name
-- muscle_group_normalized_name
+- user_id (FK -> User.user_id)
+- name
+- normalized_name
 - is_default
 - is_active
 - created_at
@@ -223,8 +228,9 @@ Represents one performed set for a session exercise.
 
 **Fields**
 - exercise_category_id (PK)
-- exercise_category_name
-- exercise_category_normalized_name
+- name
+- normalized_name
+- user_id
 - is_default
 - is_active
 - created_at
@@ -239,7 +245,7 @@ For weight or body measurements.
 
 **Fields**
 - body_metric_id (PK)
-- user_id (FK → User.user_id)
+- user_id (FK -> User.user_id)
 - metric_type
 - metric_value
 - recorded_at
@@ -256,8 +262,8 @@ For tracking best lifts.
 
 **Fields**
 - pr_id (PK)
-- user_id (FK → User.user_id)
-- exercise_id (FK → Exercise.exercise_id)
+- user_id (FK -> User.user_id)
+- exercise_id (FK -> Exercise.exercise_id)
 - record_type
 - record_value
 - achieved_at
@@ -282,12 +288,12 @@ For tracking best lifts.
 - One **Exercise** can be referenced by many **SessionExercises**
 
 ### Relationship Summary
-- User 1 → N WorkoutPlan
-- User 1 → N WorkoutSession
-- WorkoutPlan 1 → N PlanExercise
-- Exercise 1 → N PlanExercise
-- WorkoutSession 1 → N SessionExercise
-- SessionExercise 1 → N SetLog
+- User 1 -> N WorkoutPlan
+- User 1 -> N WorkoutSession
+- WorkoutPlan 1 -> N PlanExercise
+- Exercise 1 -> N PlanExercise
+- WorkoutSession 1 -> N SessionExercise
+- SessionExercise 1 -> N SetLog
 
 ---
 
@@ -297,8 +303,8 @@ For tracking best lifts.
 - **Yes**, snapshot exercise names into `SessionExercise`.
 - Recommended snapshot fields:
     - exercise_name_snapshot
-    - category_snapshot
-    - muscle_group_snapshot
+    - category_name_snapshot
+    - muscle_group_name_snapshot
 
 ### Plan Editing
 - Editing a **WorkoutPlan** or **PlanExercise** should only affect future workouts.
@@ -320,7 +326,7 @@ For tracking best lifts.
 - When this happens, the plan structure is copied into `SessionExercise` and then executed as historical data.
 
 ### Ordering Rule
-- `exercise_order` should be stored in both:
+- `order_index` should be stored in both:
     - `PlanExercise`
     - `SessionExercise`
 - This preserves intended order and performed order separately if needed.

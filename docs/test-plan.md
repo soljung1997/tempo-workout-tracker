@@ -1,4 +1,4 @@
-# Tempo — Test Plan
+# Tempo - Test Plan
 
 ## 1. Scope
 Validate the MVP features of Tempo:
@@ -21,7 +21,7 @@ Validate core logic in isolation.
 ### B. Integration Tests
 Validate that app layers work correctly together.
 
-- Room DAO operations: insert, update, delete, query
+- Expo SQLite operations: insert, update, delete, query
 - session creation from workout plan
 - set logging persistence
 - history retrieval
@@ -30,9 +30,10 @@ Validate that app layers work correctly together.
 ### C. UI / E2E Smoke Tests
 Manual testing is acceptable for MVP.
 
-- create plan → start workout → log sets → finish workout
+- manual database smoke verification
+- create plan -> start workout -> log sets -> finish workout
 - start workout from existing plan
-- kill app mid-session → reopen → continue session
+- kill app mid-session -> reopen -> continue session
 - view workout history details
 - analytics screen loads and displays expected aggregates
 - inactive exercises/plans do not break existing history

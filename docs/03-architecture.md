@@ -1,4 +1,4 @@
-# Tempo — Architecture / SDD
+# Tempo - Architecture / SDD
 
 ## 1. Goals
 - Simple, reliable offline-first workout logging
@@ -13,10 +13,10 @@
 - **UI:** React Native (Expo) + Expo Router (File based navigation)
 - **State:** React state + store later (Zustand/Redux)
 - **Domain:** "services/use-cases" as plain TS functions
-- **Data:** local first storage (SQLite via Expo, or MMKV, etc)
+- **Data:** local first storage (Expo SQLite)
 
 ## 4. Data flow (example)
-UI event → handler → (use case/service) → repository → localDB/storage → state update → UI 
+UI event -> handler -> (use case/service) -> repository -> localDB/storage -> state update -> UI 
 
 ## 5. Modules (optional for later)
 - app (UI + DI)

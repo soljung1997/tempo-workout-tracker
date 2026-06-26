@@ -52,7 +52,7 @@ Tempo is focused on:
 - **Data:** Local-first storage using Expo SQLite
 
 ### Data flow
-UI event → handler → service/use-case → repository → SQLite/local storage → state update → UI
+UI event -> handler -> service/use-case -> repository -> SQLite/local storage -> state update -> UI
 
 ## Current folder structure
 ```text
@@ -149,7 +149,7 @@ mobile/tempo/src/
 - Exercises with no prior session do not count as increased
 
 ### No-data rule
-- If there is no history, show a clear “no data yet” message instead of confusing zeros
+- If there is no history, show a clear "no data yet" message instead of confusing zeros
 
 ## Calendar rules
 ### Week view
@@ -177,45 +177,56 @@ mobile/tempo/src/
 - Confirmed navigation between placeholder screens works
 - Removed/ignored default starter tab screen such as `two.tsx`
 
-## Current task
-### M1-I1-T2: Configure Expo SQLite persistence dependency
-Original issue title may say `Room/SQLite`, but because this project uses React Native + Expo, the correct interpretation is:
+## Current foundation status
 
-> Configure Expo SQLite persistence dependency
+M1-I1 establishes the app foundation and offline data-layer base.
 
-## Important correction
-- Do **not** use Room
-- Do **not** configure KAPT/KSP
-- Do **not** add Gradle dependencies for Room
-- This is not a native Kotlin Android project
-- Use Expo SQLite for local persistence
+Completed foundation work:
 
-## Current task scope
-- Install Expo SQLite dependency
-- Confirm app still launches after dependency setup
-- Create initial data-layer folder structure
-- Add initial `database.ts`
-- Do not create full schema yet unless the issue is expanded
+- Expo Router tab shell with placeholder screens:
+  - Dashboard
+  - Plans
+  - Workout
+  - History
+  - Settings
+- Expo SQLite dependency configured
+- Shared database module created at `mobile/tempo/src/core/data/db/database.ts`
+- Database initialization runs during app startup in `app/_layout.tsx`
+- Core SQLite schema creation added for:
+  - user
+  - exercise_category
+  - muscle_group
+  - exercise
+  - workout_plan
+  - plan_exercise
+  - workout_session
+  - session_exercise
+  - set_log
+- Default lookup seed data added for:
+  - exercise categories
+  - muscle groups
+- Domain model types added under `src/core/domain/models`
+- Repository contracts and SQLite implementation skeletons added under `src/core/data/repositories`
+- Offline-first persistence conventions documented
+- Shared theme/style foundation added under `mobile/tempo/constants/styles.ts`
+- Manual database smoke verification completed and documented in `docs/database-smoke-verification.md`
 
-## Suggested commands for current task
-```powershell
-cd mobile/tempo
-npx.cmd expo install expo-sqlite
-npx.cmd expo start
-```
+Current implementation boundaries:
 
-## Suggested first database file
-Path:
-```text
-mobile/tempo/src/core/data/db/database.ts
-```
+- Expo SQLite is the MVP local source of truth.
+- Repository implementation methods are currently skeletons/placeholders.
+- Full repository SQL behavior is deferred to later milestones.
+- Services/use-cases are not implemented yet.
+- MVP feature screens are still placeholders.
+- Cloud sync, accounts, conflict resolution, export/backup, and automated database tests are deferred.
 
-Initial content:
-```ts
-import * as SQLite from "expo-sqlite";
+Important correction:
 
-export const db = SQLite.openDatabaseSync("tempo.db");
-```
+- Do not use Room.
+- Do not configure KAPT/KSP.
+- Do not add Gradle dependencies for Room.
+- This is not a native Kotlin Android project.
+- Use Expo SQLite for local persistence.
 
 ## Git discipline
 - Commit after each microtask
@@ -229,13 +240,6 @@ git status
 git restore .idea/caches/deviceStreaming.xml
 git add mobile/tempo/app
 git commit -m "Create base app shell and navigation"
-git push
-```
-
-For subissue 2:
-```powershell
-git add mobile/tempo/package.json mobile/tempo/package-lock.json mobile/tempo/src
-git commit -m "Configure Expo SQLite persistence dependency"
 git push
 ```
 
