@@ -97,6 +97,7 @@ Represents a reusable workout template.
 **Fields**
 - workout_plan_id (PK)
 - user_id (FK -> User.user_id)
+- workout_type_id (FK -> WorkoutType.workout_type_id)
 - name
 - description
 - workout_day
@@ -211,7 +212,7 @@ Represents one performed set for a session exercise.
 - Keep it simple in v1.
 - `rpe` is optional but very useful if you want progression logic later.
 
-### Muscle Group
+### H. MuscleGroup
 
 **Fields**
 - muscle_group_id (PK)
@@ -224,13 +225,25 @@ Represents one performed set for a session exercise.
 - updated_at
 
 
-### Category
+### I. Category
 
 **Fields**
 - exercise_category_id (PK)
 - name
 - normalized_name
 - user_id
+- is_default
+- is_active
+- created_at
+- updated_at
+
+### J. WorkoutType
+
+**Fields**
+- workout_type_id
+- user_id (FK -> User.user_id)
+- name
+- normalized_name
 - is_default
 - is_active
 - created_at

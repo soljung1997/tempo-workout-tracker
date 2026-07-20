@@ -1,7 +1,7 @@
 import * as SQLite from "expo-sqlite";
 import { EXERCISE_CATEGORY_SEEDS } from "../seeds/exerciseCategorySeeds";
 import { MUSCLE_GROUP_SEEDS } from "../seeds/muscleGroupSeeds";
-
+import { WORKOUT_TYPE_SEEDS } from "../seeds/workoutTypeSeeds";
 export const db = SQLite.openDatabaseSync("tempo.db");
 
 const DATABASE_VERSION = 1;
@@ -147,10 +147,27 @@ const createSetLogTableSql = `
     );
 `;
 
+const createWorkoutTypeTableSql = `
+    CREATE TABLE IF NOT EXISTS workout_type (
+        workout_type_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        name TEXT NOT NULL,
+        normalized_name TEXT NOT NULL,
+        is_default INTEGER NOT NULL DEFAULT 0,
+        is_active INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+
+        FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+        UNIQUE (user_id, normalized_name)
+    );
+`;
+
 const createWorkoutPlanTableSql = `
     CREATE TABLE IF NOT EXISTS workout_plan (
         workout_plan_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
+        workout_type_id INTEGER,
         name TEXT NOT NULL,
         description TEXT,
         workout_day TEXT CHECK (
@@ -163,7 +180,8 @@ const createWorkoutPlanTableSql = `
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
 
-        FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+        FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (workout_type_id) REFERENCES workout_type(workout_type_id) ON DELETE RESTRICT
     );
 `;
 
@@ -259,6 +277,40 @@ function seedMuscleGroups() {
     }
 }
 
+function seedWorkoutTypes() {
+    const now = new Date().toISOString();
+
+    for (const workoutType of WORKOUT_TYPE_SEEDS) {
+        const normalizedName = normalizeName(workoutType.name);
+
+        db.runSync(
+            `
+                INSERT INTO workout_type (
+                user_id,
+                name,
+                normalized_name,
+                is_default,
+                is_active,
+                created_at,
+                updated_at
+                )
+                SELECT NULL, ?, ?, 1, 1, ?, ?
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM workout_type
+                    WHERE user_id IS NULL
+                        AND normalized_name = ?
+                );
+            `,
+            workoutType.name.trim(),
+            normalizedName,
+            now,
+            now,
+            normalizedName
+        );
+    }
+}
+
 const createIndexesSql = `
   CREATE INDEX IF NOT EXISTS idx_exercise_user_id
     ON exercise(user_id);
@@ -278,6 +330,13 @@ const createIndexesSql = `
   CREATE INDEX IF NOT EXISTS idx_workout_session_user_id
     ON workout_session(user_id);
 
+  CREATE INDEX IF NOT EXISTS
+  idx_workout_type_user_id
+    ON workout_type(user_id);
+
+  CREATE INDEX IF NOT EXISTS idx_workout_plan_workout_type_id
+    ON workout_plan(workout_type_id);
+
   CREATE INDEX IF NOT EXISTS idx_session_exercise_workout_session_id
     ON session_exercise(workout_session_id);
 
@@ -291,6 +350,7 @@ export function initializeDatabase() {
     db.execSync(createUserTableSql);
     db.execSync(createExerciseCategoryTableSql);
     db.execSync(createMuscleGroupTableSql);
+    db.execSync(createWorkoutTypeTableSql);
     db.execSync(createExerciseTableSql);
     db.execSync(createWorkoutPlanTableSql);
     db.execSync(createPlanExerciseTableSql);
@@ -302,6 +362,7 @@ export function initializeDatabase() {
     db.withTransactionSync(() => {
         seedExerciseCategories();
         seedMuscleGroups();
+        seedWorkoutTypes();
     });
 
     db.execSync(`PRAGMA user_version = ${DATABASE_VERSION};`);
