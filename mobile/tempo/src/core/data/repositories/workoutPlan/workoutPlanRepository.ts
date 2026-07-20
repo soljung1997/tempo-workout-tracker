@@ -2,10 +2,12 @@
 
 import type { User } from "../../../domain/models/user";
 import type { WorkoutPlan } from "../../../domain/models/workoutPlan";
+import type { WorkoutType } from "../../../domain/models/workoutType";
 
 //Create a workout plan input contract
 export type CreateWorkoutPlanInput = {
     userId: User["id"];
+    workoutTypeId?: WorkoutType["id"];
     name: string;
     description?: string;
     workoutDay?: WorkoutPlan["workoutDay"];
@@ -14,6 +16,7 @@ export type CreateWorkoutPlanInput = {
 
 export type UpdateWorkoutPlanInput = {
     id: WorkoutPlan["id"];
+    workoutTypeId?: WorkoutType["id"];
     name?: string;
     description?: string;
     workoutDay?: WorkoutPlan["workoutDay"];
