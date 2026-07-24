@@ -10,6 +10,23 @@ function normalizeName(name: string): string {
     return name.trim().toLowerCase();
 }
 
+function addWorkoutTypeIdToWorkoutPlanIfNeeded() {
+    const columns = db.getAllSync<{ name: string }>(
+        `PRAGMA table_info(workout_plan);`
+    );
+
+    const hasWorkoutTypeId = columns.some((column) => {
+        return column.name === "workout_type_id";
+    });
+
+    if (!hasWorkoutTypeId) {
+        db.execSync(`
+            ALTER TABLE workout_plan
+            ADD COLUMN workout_type_id INTEGER;
+        `);
+    }
+}
+
 const createUserTableSql = `
     CREATE TABLE IF NOT EXISTS user (
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -353,6 +370,9 @@ export function initializeDatabase() {
     db.execSync(createWorkoutTypeTableSql);
     db.execSync(createExerciseTableSql);
     db.execSync(createWorkoutPlanTableSql);
+
+    addWorkoutTypeIdToWorkoutPlanIfNeeded();
+
     db.execSync(createPlanExerciseTableSql);
     db.execSync(createWorkoutSessionTableSql);
     db.execSync(createSessionExerciseTableSql);
