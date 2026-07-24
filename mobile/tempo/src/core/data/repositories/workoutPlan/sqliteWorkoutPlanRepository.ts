@@ -1,4 +1,4 @@
-import type { CreateWorkoutPlanInput, UpdateWorkoutPlanInput, WorkoutPlanRepository } from "./workoutPlanRepository";
+import type { WorkoutPlanRepository } from "./workoutPlanRepository";
 import { db } from "../../db/database";
 import type { WorkoutPlan } from "../../../domain/models/workoutPlan";
 
