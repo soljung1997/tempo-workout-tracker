@@ -27,6 +27,30 @@ function addWorkoutTypeIdToWorkoutPlanIfNeeded() {
     }
 }
 
+function seedMvpUser() {
+    const now = new Date().toISOString();
+    
+    db.runSync(
+        `
+            INSERT INTO user (
+                user_id,
+                display_name,
+                is_active,
+                created_at,
+                updated_at
+            )
+            SELECT 1, 'Local User', 1, ?, ?
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM user
+                WHERE user_id = 1
+            );
+        `,
+        now,
+        now
+    );
+}
+
 const createUserTableSql = `
     CREATE TABLE IF NOT EXISTS user (
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -380,6 +404,7 @@ export function initializeDatabase() {
 
     db.execSync(createIndexesSql);
     db.withTransactionSync(() => {
+        seedMvpUser();
         seedExerciseCategories();
         seedMuscleGroups();
         seedWorkoutTypes();

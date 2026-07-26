@@ -6,13 +6,16 @@ import {
   Text,
   View,
 } from "react-native";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+
 import { globalStyles as styles, theme } from "../../constants/styles";
+import { screenStyles } from "../../constants/screenStyles";
 import type { WorkoutPlan } from "../../src/core/domain/models/workoutPlan";
+import type { WorkoutType } from "../../src/core/domain/models/workoutType";
 import { createWorkoutPlanTemplateService } from "../../src/core/domain/services/workoutPlanTemplateService";
 import { sqliteWorkoutPlanRepository } from "../../src/core/data/repositories/workoutPlan/sqliteWorkoutPlanRepository";
 import { sqlitePlanExerciseRepository } from "../../src/core/data/repositories/planExercise/sqlitePlanExerciseRepository";
-import { screenStyles } from "../../constants/screenStyles";
+import { sqliteWorkoutTypeRepository } from "../../src/core/data/repositories/workoutType/sqliteWorkoutTypeRepository";
 
 const MVP_USER_ID = 1;
 
@@ -23,15 +26,22 @@ const workoutPlanTemplateService = createWorkoutPlanTemplateService(
 
 export default function PlansScreen() {
   const [plans, setPlans] = useState<WorkoutPlan[]>([]);
+  const [workoutTypes, setWorkoutTypes] = useState<WorkoutType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const loadPlans = useCallback(async () => {
     setIsLoading(true);
     setErrorMessage(null);
+
     try {
-      const activePlans = await workoutPlanTemplateService.listWorkoutPlanTemplates(MVP_USER_ID);
+      const [activePlans, activeWorkoutTypes] = await Promise.all([
+        workoutPlanTemplateService.listWorkoutPlanTemplates(MVP_USER_ID),
+        sqliteWorkoutTypeRepository.listActiveForUser(MVP_USER_ID),
+      ]);
+
       setPlans(activePlans);
+      setWorkoutTypes(activeWorkoutTypes);
     } catch (error) {
       console.error(error);
       setErrorMessage("Unable to load workout plans.");
@@ -56,73 +66,82 @@ export default function PlansScreen() {
           </Text>
         </View>
 
-        <Pressable style={screenStyles.createButton}>
+        <Pressable
+          style={screenStyles.createButton}
+          onPress={() => router.push("/plans/create")}
+        >
           <Text style={screenStyles.createButtonText}>Create Plan</Text>
         </Pressable>
       </View>
 
       {isLoading ? (
         <View style={screenStyles.centerState}>
-          <ActivityIndicator color={theme.colors.primary}/>
+          <ActivityIndicator color={theme.colors.primary} />
           <Text style={screenStyles.stateText}>Loading plans...</Text>
         </View>
-      ): errorMessage ? (
+      ) : errorMessage ? (
         <View style={screenStyles.centerState}>
           <Text style={screenStyles.errorText}>{errorMessage}</Text>
           <Pressable style={screenStyles.secondaryButton} onPress={loadPlans}>
             <Text style={screenStyles.secondaryButtonText}>Try Again</Text>
           </Pressable>
         </View>
-      ): plans.length === 0 ? (
+      ) : plans.length === 0 ? (
         <View style={screenStyles.emptyCard}>
           <Text style={screenStyles.emptyTitle}>No Workout Plans Yet</Text>
           <Text style={screenStyles.emptyText}>
             Create your first template so future workouts have a structure to start from.
           </Text>
-        </View> 
+        </View>
       ) : (
         <FlatList
           data={plans}
           keyExtractor={(plan) => plan.id.toString()}
           contentContainerStyle={screenStyles.listContent}
-          renderItem={({ item }) => <WorkoutPlanCard plan={item} />}
-          />
+          renderItem={({ item }) => (
+            <WorkoutPlanCard plan={item} workoutTypes={workoutTypes} />
+          )}
+        />
       )}
     </View>
   );
 }
 
-function WorkoutPlanCard({ plan }: { plan: WorkoutPlan }) {
-    return (
-        <Pressable style={screenStyles.planCard}>
-            <View style={screenStyles.planCardHeader}>
-                <Text style={screenStyles.planName}>{plan.name}</Text>
-                <Text style={screenStyles.openText}>Open</Text>
-            </View>
+function WorkoutPlanCard({
+  plan,
+  workoutTypes,
+}: {
+  plan: WorkoutPlan;
+  workoutTypes: WorkoutType[];
+}) {
+  const workoutTypeName = workoutTypes.find((type) => {
+    return type.id === plan.workoutTypeId;
+  })?.name;
 
-            {plan.description ? (
-                <Text style={screenStyles.planDescription}>{plan.description}</Text>
-            ) : null}
+  return (
+    <Pressable style={screenStyles.planCard}>
+      <View style={screenStyles.planCardHeader}>
+        <Text style={screenStyles.planName}>{plan.name}</Text>
+        <Text style={screenStyles.openText}>Open</Text>
+      </View>
 
-            <View style={screenStyles.metadataRow}>
-                <MetadataPill label={plan.workoutDay ?? "No day"} />
-                <MetadataPill label={plan.goal ?? "No goal"} />
-                <MetadataPill
-                    label={
-                        plan.workoutTypeId
-                            ? `Type #${plan.workoutTypeId}`
-                            : "No type"
-                    }
-                />
-            </View>
-        </Pressable>
-    );
+      {plan.description ? (
+        <Text style={screenStyles.planDescription}>{plan.description}</Text>
+      ) : null}
+
+      <View style={screenStyles.metadataRow}>
+        <MetadataPill label={plan.workoutDay ?? "No day"} />
+        <MetadataPill label={plan.goal ?? "No goal"} />
+        <MetadataPill label={workoutTypeName ?? "No type"} />
+      </View>
+    </Pressable>
+  );
 }
 
 function MetadataPill({ label }: { label: string }) {
-    return (
-        <View style={screenStyles.metadataPill}>
-            <Text style={screenStyles.metadataText}>{label}</Text>
-        </View>
-    );
+  return (
+    <View style={screenStyles.metadataPill}>
+      <Text style={screenStyles.metadataText}>{label}</Text>
+    </View>
+  );
 }
