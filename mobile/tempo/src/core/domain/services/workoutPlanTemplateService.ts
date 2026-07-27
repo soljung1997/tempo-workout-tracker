@@ -15,10 +15,12 @@ export type WorkoutPlanTemplateService = {
     createWorkoutPlanTemplate(input: CreateWorkoutPlanInput): Promise<WorkoutPlan>;
     updateWorkoutPlanTemplate(input: UpdateWorkoutPlanInput): Promise<WorkoutPlan>;
     deleteWorkoutPlanTemplate(id: WorkoutPlan["id"]): Promise<void>;
+    getWorkoutPlanTemplateById(id: WorkoutPlan["id"]): Promise<WorkoutPlan | null>;
     listWorkoutPlanTemplates(userId: WorkoutPlan["userId"]): Promise<WorkoutPlan[]>;
 
     addExerciseToWorkoutPlan(input: CreatePlanExerciseInput): Promise<PlanExercise>;
     updatePlanExercise(input: UpdatePlanExerciseInput): Promise<PlanExercise>;
+    listPlanExercisesForWorkoutPlan(workoutPlanId: WorkoutPlan["id"]): Promise<PlanExercise[]>;
     removeExerciseFromWorkoutPlan(id: PlanExercise["id"]): Promise<void>;
     reorderPlanExercises(
         workoutPlanId: WorkoutPlan["id"],
@@ -43,6 +45,10 @@ export function createWorkoutPlanTemplateService(
             return workoutPlanRepository.softDelete(id);
         },
 
+        async getWorkoutPlanTemplateById(id) {
+            return workoutPlanRepository.findById(id);
+        },
+
         async listWorkoutPlanTemplates(userId) {
             return workoutPlanRepository.listActiveByUserId(userId);
         },
@@ -53,6 +59,10 @@ export function createWorkoutPlanTemplateService(
 
         async updatePlanExercise(input) {
             return planExerciseRepository.update(input);
+        },
+
+        async listPlanExercisesForWorkoutPlan(workoutPlanId) {
+            return planExerciseRepository.listActiveByWorkoutPlanId(workoutPlanId);
         },
 
         async removeExerciseFromWorkoutPlan(id) {

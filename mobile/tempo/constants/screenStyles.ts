@@ -148,4 +148,28 @@ export const screenStyles = StyleSheet.create({
         fontSize: theme.fontSize.xs,
         textTransform: "capitalize",
     },
+
+    detailContent: {
+        flex: 1,
+        gap: theme.spacing.lg,
+    },
+
+    sectionHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: theme.spacing.md,
+    },
+
+    sectionTitle: {
+        color: theme.colors.text,
+        fontFamily: theme.typography.medium,
+        fontSize: theme.fontSize.lg,
+    },
+
+    sectionSubtitle: {
+        color: theme.colors.textMuted,
+        fontFamily: theme.typography.regular,
+        fontSize: theme.fontSize.sm,
+    },
 });

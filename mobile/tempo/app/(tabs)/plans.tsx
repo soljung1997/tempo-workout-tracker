@@ -99,7 +99,15 @@ export default function PlansScreen() {
           keyExtractor={(plan) => plan.id.toString()}
           contentContainerStyle={screenStyles.listContent}
           renderItem={({ item }) => (
-            <WorkoutPlanCard plan={item} workoutTypes={workoutTypes} />
+            <WorkoutPlanCard 
+              plan={item} 
+              workoutTypes={workoutTypes} 
+              onPress={() => 
+                router.push({
+                  pathname: "/plans/[workoutPlanId]",
+                  params: { workoutPlanId: item.id.toString() },
+                })}  
+            />
           )}
         />
       )}
@@ -110,16 +118,18 @@ export default function PlansScreen() {
 function WorkoutPlanCard({
   plan,
   workoutTypes,
+  onPress,
 }: {
   plan: WorkoutPlan;
   workoutTypes: WorkoutType[];
+  onPress: () => void;
 }) {
   const workoutTypeName = workoutTypes.find((type) => {
     return type.id === plan.workoutTypeId;
   })?.name;
 
   return (
-    <Pressable style={screenStyles.planCard}>
+    <Pressable style={screenStyles.planCard} onPress={onPress}>
       <View style={screenStyles.planCardHeader}>
         <Text style={screenStyles.planName}>{plan.name}</Text>
         <Text style={screenStyles.openText}>Open</Text>
