@@ -88,4 +88,26 @@ export const formStyles = StyleSheet.create({
         marginTop: theme.spacing.sm,
         textAlign: "center",
     },
+    
+    exercisePickerContainer: {
+        backgroundColor: theme.colors.surface,
+        borderColor: theme.colors.border,
+        borderWidth: 1,
+        borderRadius: 16,
+        padding: theme.spacing.sm,
+    },
+
+    exercisePickerList: {
+        maxHeight: 240,
+    },
+
+    exercisePickerOptions: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: theme.spacing.sm,
+    },
+
+    scrollContent: {
+        paddingBottom: theme.spacing.xxxl ?? 64,
+    },
 });

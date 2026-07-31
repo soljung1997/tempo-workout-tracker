@@ -20,6 +20,7 @@ export type WorkoutPlanTemplateService = {
 
     addExerciseToWorkoutPlan(input: CreatePlanExerciseInput): Promise<PlanExercise>;
     updatePlanExercise(input: UpdatePlanExerciseInput): Promise<PlanExercise>;
+    findPlanExerciseById(id: PlanExercise["id"]): Promise<PlanExercise | null>;
     listPlanExercisesForWorkoutPlan(workoutPlanId: WorkoutPlan["id"]): Promise<PlanExercise[]>;
     removeExerciseFromWorkoutPlan(id: PlanExercise["id"]): Promise<void>;
     reorderPlanExercises(
@@ -59,6 +60,10 @@ export function createWorkoutPlanTemplateService(
 
         async updatePlanExercise(input) {
             return planExerciseRepository.update(input);
+        },
+
+        async findPlanExerciseById(id) {
+            return planExerciseRepository.findById(id);
         },
 
         async listPlanExercisesForWorkoutPlan(workoutPlanId) {

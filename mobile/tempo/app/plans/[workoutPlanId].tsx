@@ -10,7 +10,7 @@ import type { WorkoutPlan } from "@/src/core/domain/models/workoutPlan";
 import type { PlanExercise } from "@/src/core/domain/models/planExercise";
 import type { Exercise } from "@/src/core/domain/models/exercise";
 import { useCallback, useState } from "react";
-import { useFocusEffect, useLocalSearchParams, Stack } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, Stack, router } from "expo-router";
 import { createWorkoutPlanTemplateService } from "@/src/core/domain/services/workoutPlanTemplateService";
 import { sqlitePlanExerciseRepository } from "@/src/core/data/repositories/planExercise/sqlitePlanExerciseRepository";
 import { sqliteWorkoutPlanRepository } from "@/src/core/data/repositories/workoutPlan/sqliteWorkoutPlanRepository";
@@ -35,6 +35,13 @@ export default function WorkoutPlanDetailsScreen() {
     const [exercisesById, setExercisesById] = useState<Record<number, Exercise>>({});
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    function handleAddExercise() {
+        router.push({
+            pathname: "/plans/[workoutPlanId]/exercises/add-exercise",
+            params: { workoutPlanId: parsedWorkoutPlanId.toString() },
+        });
+    }
 
     const loadWorkoutPlan = useCallback(async () => {
         setIsLoading(true);
@@ -65,7 +72,7 @@ export default function WorkoutPlanDetailsScreen() {
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [parsedWorkoutPlanId]);
 
     useFocusEffect(
         useCallback(() => {
@@ -81,6 +88,15 @@ export default function WorkoutPlanDetailsScreen() {
                     <Text style={styles.title}>{workoutPlan?.name ?? "Workout Plan"}</Text>
                     <Text style={styles.subtitle}>Review this template before editing exercises.</Text>
                 </View>
+                <Pressable
+                        style={screenStyles.createButton}
+                        onPress={() => router.push({
+                            pathname: "/plans/[workoutPlanId]/edit",
+                            params: { workoutPlanId: parsedWorkoutPlanId.toString() },
+                    })}  
+                    >
+                      <Text style={screenStyles.createButtonText}>Update Plan</Text>
+                </Pressable>
             </View>
         
 
@@ -110,10 +126,15 @@ export default function WorkoutPlanDetailsScreen() {
                 </View>
 
                 <View style={screenStyles.sectionHeader}>
-                    <Text style={screenStyles.sectionTitle}>Exercises</Text>
-                    <Text style={screenStyles.sectionSubtitle}>
-                        {planExercises.length} planned
-                    </Text>
+                    <View>
+                        <Text style={screenStyles.sectionTitle}>Exercises</Text>
+                        <Text style={screenStyles.sectionSubtitle}>
+                            {planExercises.length} planned
+                        </Text>
+                    </View>
+                    <Pressable style={screenStyles.createButton} onPress={handleAddExercise}>
+                        <Text style={screenStyles.createButtonText}>Add Exercise</Text>
+                    </Pressable>
                 </View>
 
                 <FlatList
@@ -121,9 +142,18 @@ export default function WorkoutPlanDetailsScreen() {
                     keyExtractor={(exercise) => exercise.id.toString()}
                     contentContainerStyle={screenStyles.listContent}
                     renderItem={({ item }) => (
-                        <PlanExerciseCard 
+                        <PlanExerciseCard
                             planExercise={item}
-                            exercise={exercisesById[item.exerciseId]} 
+                            exercise={exercisesById[item.exerciseId]}
+                            onPress={() =>
+                                router.push({
+                                    pathname: "/plans/[workoutPlanId]/exercises/[planExerciseId]/edit",
+                                    params: {
+                                        workoutPlanId: parsedWorkoutPlanId.toString(),
+                                        planExerciseId: item.id.toString(),
+                                    },
+                                })
+                            }
                         />
                     )}
                     ListEmptyComponent={
@@ -132,6 +162,10 @@ export default function WorkoutPlanDetailsScreen() {
                             <Text style={screenStyles.emptyText}>
                                 Add exercises to this plan in the next step.
                             </Text>
+
+                            <Pressable style={screenStyles.createButton} onPress={handleAddExercise}>
+                                <Text style={screenStyles.createButtonText}>Add Exercise</Text>
+                            </Pressable>
                         </View>
                     }
                 />
@@ -145,12 +179,14 @@ export default function WorkoutPlanDetailsScreen() {
 function PlanExerciseCard({
     planExercise,
     exercise,
+    onPress,
 }: {
     planExercise: PlanExercise;
     exercise: Exercise | undefined;
+    onPress: () => void;
 }) {
     return (
-        <Pressable style={screenStyles.planCard}>
+        <Pressable style={screenStyles.planCard} onPress={onPress}>
             <View style={screenStyles.planCardHeader}>
                 <Text style={screenStyles.planName}>
                     {exercise?.name?? `Exercise #${planExercise.exerciseId}`}

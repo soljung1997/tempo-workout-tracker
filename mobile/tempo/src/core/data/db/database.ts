@@ -2,6 +2,7 @@ import * as SQLite from "expo-sqlite";
 import { EXERCISE_CATEGORY_SEEDS } from "../seeds/exerciseCategorySeeds";
 import { MUSCLE_GROUP_SEEDS } from "../seeds/muscleGroupSeeds";
 import { WORKOUT_TYPE_SEEDS } from "../seeds/workoutTypeSeeds";
+import { EXERCISE_SEEDS } from "../seeds/exerciseSeeds";
 export const db = SQLite.openDatabaseSync("tempo.db");
 
 const DATABASE_VERSION = 1;
@@ -318,6 +319,73 @@ function seedMuscleGroups() {
     }
 }
 
+function seedExercises() {
+    const now = new Date().toISOString();
+
+    for (const exercise of EXERCISE_SEEDS) {
+        const normalizedName = normalizeName(exercise.name);
+
+        const categoryRow = db.getFirstSync<{ exercise_category_id: number }>(
+            `
+                SELECT exercise_category_id
+                FROM exercise_category
+                WHERE user_id IS NULL
+                    AND normalized_name = ?;
+            `,
+            normalizeName(exercise.categoryName)
+        );
+
+        const muscleGroupRow = db.getFirstSync<{ muscle_group_id: number }>(
+            `
+                SELECT muscle_group_id
+                FROM muscle_group
+                WHERE user_id IS NULL
+                    AND normalized_name = ?;
+            `,
+            normalizeName(exercise.muscleGroupName)
+        );
+
+        if (!categoryRow || !muscleGroupRow) {
+            throw new Error(`Missing seed lookup data for exercise: ${exercise.name}`);
+        }
+
+        db.runSync(
+            `
+                INSERT INTO exercise (
+                user_id,
+                name,
+                normalized_name,
+                category_id,
+                muscle_group_id,
+                default_sets,
+                default_reps,
+                default_rest_seconds,
+                is_active,
+                created_at,
+                updated_at
+                )
+                SELECT NULL, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM exercise
+                    WHERE user_id IS NULL
+                        AND normalized_name = ?
+                );
+            `,
+            exercise.name.trim(),
+            normalizedName,
+            categoryRow.exercise_category_id,
+            muscleGroupRow.muscle_group_id,
+            exercise.defaultSets,
+            exercise.defaultReps,
+            exercise.defaultRestSeconds,
+            now,
+            now,
+            normalizedName
+        );
+    }
+}
+
 function seedWorkoutTypes() {
     const now = new Date().toISOString();
 
@@ -408,6 +476,7 @@ export function initializeDatabase() {
         seedExerciseCategories();
         seedMuscleGroups();
         seedWorkoutTypes();
+        seedExercises();
     });
 
     db.execSync(`PRAGMA user_version = ${DATABASE_VERSION};`);

@@ -15,6 +15,7 @@ export const screenStyles = StyleSheet.create({
         paddingHorizontal: theme.spacing.md,
         paddingVertical: theme.spacing.sm,
         borderRadius: 12,
+        alignSelf: "flex-start",
     },
 
     createButtonText: {
