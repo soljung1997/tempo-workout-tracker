@@ -1,6 +1,13 @@
 import { useCallback, useState } from 'react';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { Text } from 'react-native';
+import { 
+    View,
+    Text,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView, 
+
+} from 'react-native';
 
 import { WorkoutPlanForm } from '../../../components/workoutPlan/WorkoutPlanForm';
 import type { WorkoutPlanFormValues } from '../../../components/workoutPlan/WorkoutPlanForm';
@@ -11,6 +18,7 @@ import { sqliteWorkoutPlanRepository } from '../../../src/core/data/repositories
 import { sqlitePlanExerciseRepository } from '../../../src/core/data/repositories/planExercise/sqlitePlanExerciseRepository';
 import { sqliteWorkoutTypeRepository } from '../../../src/core/data/repositories/workoutType/sqliteWorkoutTypeRepository';
 import { formStyles } from '../../../constants/formStyles';
+import { globalStyles as styles } from '../../../constants/styles';
 
 const MVP_USER_ID = 1;
 
@@ -81,22 +89,31 @@ export default function UpdateWorkoutPlanScreen() {
         return <Text style={formStyles.errorText}>Workout plan not found.</Text>
     }
     return (
-        <>
-            <WorkoutPlanForm 
-                initialValues={{
-                    name: workoutPlan.name,
-                    description: workoutPlan.description,
-                    workoutDay: workoutPlan.workoutDay,
-                    goal: workoutPlan.goal,
-                    workoutTypeId: workoutPlan.workoutTypeId,
-                }}
-                workoutTypes={workoutTypes}
-                submitLabel="Update Workout Plan"
-                onSubmit={handleSubmit} 
-            />
-            {errorMessage ? (
-                <Text style={formStyles.errorText}>{errorMessage}</Text>
-            ) : null}
-        </>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={120}
+        >
+            <ScrollView 
+                style={styles.screen}
+                contentContainerStyle={formStyles.scrollContent}
+                keyboardShouldPersistTaps="handled">
+                <WorkoutPlanForm 
+                    initialValues={{
+                        name: workoutPlan.name,
+                        description: workoutPlan.description,
+                        workoutDay: workoutPlan.workoutDay,
+                        goal: workoutPlan.goal,
+                        workoutTypeId: workoutPlan.workoutTypeId,
+                    }}
+                    workoutTypes={workoutTypes}
+                    submitLabel="Update Workout Plan"
+                    onSubmit={handleSubmit} 
+                />
+                {errorMessage ? (
+                    <Text style={formStyles.errorText}>{errorMessage}</Text>
+                ) : null}
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }

@@ -1,11 +1,14 @@
 import { useCallback, useState } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import {
+    KeyboardAvoidingView,
+    Platform,
     ActivityIndicator,
     Pressable,
     Text,
     TextInput,
     View,
+    ScrollView,
 } from "react-native";
 
 import { globalStyles as styles, theme } from "@/constants/styles";
@@ -139,92 +142,101 @@ export default function EditPlanExerciseScreen() {
     }
 
     return (
-        <View style={styles.screen}>
-            <View style={screenStyles.header}>
-                <View>
-                    <Text style={styles.title}>
-                        {exercise?.name ?? `Exercise #${planExercise.exerciseId}`}
-                    </Text>
-                    <Text style={styles.subtitle}>
-                        Update targets for this workout plan.
-                    </Text>
-                </View>
-            </View>
-
-            <View style={formStyles.form}>
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Target Sets</Text>
-                    <TextInput
-                        value={targetSets}
-                        onChangeText={setTargetSets}
-                        placeholder="Example: 3"
-                        placeholderTextColor={theme.colors.textMuted}
-                        keyboardType="numeric"
-                        style={formStyles.input}
-                    />
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={120}
+        >
+            <ScrollView 
+            style={styles.screen}
+            contentContainerStyle={formStyles.scrollContent}
+            keyboardShouldPersistTaps="handled">
+                <View style={screenStyles.header}>
+                    <View>
+                        <Text style={styles.title}>
+                            {exercise?.name ?? `Exercise #${planExercise.exerciseId}`}
+                        </Text>
+                        <Text style={styles.subtitle}>
+                            Update targets for this workout plan.
+                        </Text>
+                    </View>
                 </View>
 
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Target Reps</Text>
-                    <TextInput
-                        value={targetReps}
-                        onChangeText={setTargetReps}
-                        placeholder="Example: 10"
-                        placeholderTextColor={theme.colors.textMuted}
-                        keyboardType="numeric"
-                        style={formStyles.input}
-                    />
+                <View style={formStyles.form}>
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Target Sets</Text>
+                        <TextInput
+                            value={targetSets}
+                            onChangeText={setTargetSets}
+                            placeholder="Example: 3"
+                            placeholderTextColor={theme.colors.textMuted}
+                            keyboardType="numeric"
+                            style={formStyles.input}
+                        />
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Target Reps</Text>
+                        <TextInput
+                            value={targetReps}
+                            onChangeText={setTargetReps}
+                            placeholder="Example: 10"
+                            placeholderTextColor={theme.colors.textMuted}
+                            keyboardType="numeric"
+                            style={formStyles.input}
+                        />
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Target Weight</Text>
+                        <TextInput
+                            value={targetWeight}
+                            onChangeText={setTargetWeight}
+                            placeholder="Example: 135"
+                            placeholderTextColor={theme.colors.textMuted}
+                            keyboardType="numeric"
+                            style={formStyles.input}
+                        />
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Rest Seconds</Text>
+                        <TextInput
+                            value={targetRestSeconds}
+                            onChangeText={setTargetRestSeconds}
+                            placeholder="Example: 90"
+                            placeholderTextColor={theme.colors.textMuted}
+                            keyboardType="numeric"
+                            style={formStyles.input}
+                        />
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Notes</Text>
+                        <TextInput
+                            value={notes}
+                            onChangeText={setNotes}
+                            placeholder="Optional notes"
+                            placeholderTextColor={theme.colors.textMuted}
+                            style={[formStyles.input, formStyles.multilineInput]}
+                            multiline
+                        />
+                    </View>
+
+                    {errorMessage ? (
+                        <Text style={formStyles.errorText}>{errorMessage}</Text>
+                    ) : null}
+
+                    <Pressable style={formStyles.submitButton} onPress={handleSubmit}>
+                        <Text style={formStyles.submitButtonText}>Update Exercise</Text>
+                    </Pressable>
+
+                    <Pressable style={screenStyles.secondaryButton} onPress={handleRemove}>
+                        <Text style={screenStyles.secondaryButtonText}>Remove Exercise</Text>
+                    </Pressable>
                 </View>
-
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Target Weight</Text>
-                    <TextInput
-                        value={targetWeight}
-                        onChangeText={setTargetWeight}
-                        placeholder="Example: 135"
-                        placeholderTextColor={theme.colors.textMuted}
-                        keyboardType="numeric"
-                        style={formStyles.input}
-                    />
-                </View>
-
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Rest Seconds</Text>
-                    <TextInput
-                        value={targetRestSeconds}
-                        onChangeText={setTargetRestSeconds}
-                        placeholder="Example: 90"
-                        placeholderTextColor={theme.colors.textMuted}
-                        keyboardType="numeric"
-                        style={formStyles.input}
-                    />
-                </View>
-
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Notes</Text>
-                    <TextInput
-                        value={notes}
-                        onChangeText={setNotes}
-                        placeholder="Optional notes"
-                        placeholderTextColor={theme.colors.textMuted}
-                        style={[formStyles.input, formStyles.multilineInput]}
-                        multiline
-                    />
-                </View>
-
-                {errorMessage ? (
-                    <Text style={formStyles.errorText}>{errorMessage}</Text>
-                ) : null}
-
-                <Pressable style={formStyles.submitButton} onPress={handleSubmit}>
-                    <Text style={formStyles.submitButtonText}>Update Exercise</Text>
-                </Pressable>
-
-                <Pressable style={screenStyles.secondaryButton} onPress={handleRemove}>
-                    <Text style={screenStyles.secondaryButtonText}>Remove Exercise</Text>
-                </Pressable>
-            </View>
-        </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 

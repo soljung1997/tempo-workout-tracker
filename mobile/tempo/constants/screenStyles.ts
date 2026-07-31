@@ -47,8 +47,9 @@ export const screenStyles = StyleSheet.create({
     secondaryButton: {
         borderColor: theme.colors.border,
         borderWidth: 1,
+        alignItems: "center",
         paddingHorizontal: theme.spacing.md,
-        paddingVertical: theme.spacing.sm,
+        paddingVertical: theme.spacing.md,
         borderRadius: 12,
     },
 

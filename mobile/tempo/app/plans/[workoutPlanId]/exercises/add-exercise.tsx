@@ -1,6 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import {
+    KeyboardAvoidingView,
+    Platform,
     ActivityIndicator,
     Pressable,
     ScrollView,
@@ -38,6 +40,11 @@ export default function AddExerciseToWorkoutPlanScreen() {
     const [notes, setNotes] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const targetRepsInputRef = useRef<TextInput>(null);
+    const targetWeightInputRef = useRef<TextInput>(null);
+    const restSecondsInputRef = useRef<TextInput>(null);
+    const notesInputRef = useRef<TextInput>(null);
 
     const loadExercises = useCallback(async () => {
         setIsLoading(true);
@@ -104,132 +111,155 @@ export default function AddExerciseToWorkoutPlanScreen() {
     }
 
     return (
-        <ScrollView 
-        style={styles.screen}
-        contentContainerStyle={formStyles.scrollContent}
-        keyboardShouldPersistTaps="handled">
-            <View style={screenStyles.header}>
-                <View>
-                    <Text style={styles.title}>Add Exercise</Text>
-                    <Text style={styles.subtitle}>
-                        Choose an exercise and set target values.
-                    </Text>
-                </View>
-            </View>
-
-            <View style={formStyles.form}>
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Exercise</Text>
-                    <View style={formStyles.exercisePickerContainer}>
-                        <ScrollView
-                            style={formStyles.exercisePickerList}
-                            nestedScrollEnabled
-                        >
-                            {exercises.length === 0 ? (
-                                <View style={screenStyles.emptyCard}>
-                                    <Text style={screenStyles.emptyTitle}>No exercises found</Text>
-                                    <Text style={screenStyles.emptyText}>
-                                        Add exercise library data before adding exercises to a plan.
-                                    </Text>
-                                </View>
-                            ) : (
-                                <View style={formStyles.exercisePickerOptions}>
-                                    {exercises.map((exercise) => (
-                                <Pressable
-                                    key={exercise.id}
-                                    style={[
-                                        formStyles.dayChip,
-                                        selectedExerciseId === exercise.id && formStyles.dayChipSelected,
-                                    ]}
-                                    onPress={() => setSelectedExerciseId(exercise.id)}
-                                >
-                                    <Text
-                                        style={[
-                                            formStyles.dayChipText,
-                                            selectedExerciseId === exercise.id &&
-                                                formStyles.dayChipTextSelected,
-                                        ]}
-                                    >
-                                        {exercise.name}
-                                    </Text>
-                                </Pressable>
-                                    ))}
-                                </View>
-                            )}
-                        </ScrollView>
+        <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={120}
+        >
+            <ScrollView 
+            style={styles.screen}
+            contentContainerStyle={formStyles.scrollContent}
+            keyboardShouldPersistTaps="handled">
+                <View style={screenStyles.header}>
+                    <View>
+                        <Text style={styles.title}>Add Exercise</Text>
+                        <Text style={styles.subtitle}>
+                            Choose an exercise and set target values.
+                        </Text>
                     </View>
-                    
                 </View>
 
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Target Sets</Text>
-                    <TextInput
-                        value={targetSets}
-                        onChangeText={setTargetSets}
-                        placeholder="Example: 3"
-                        placeholderTextColor={theme.colors.textMuted}
-                        keyboardType="numeric"
-                        style={formStyles.input}
-                    />
+                <View style={formStyles.form}>
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Exercise</Text>
+                        <View style={formStyles.exercisePickerContainer}>
+                            <ScrollView
+                                style={formStyles.exercisePickerList}
+                                nestedScrollEnabled
+                            >
+                                {exercises.length === 0 ? (
+                                    <View style={screenStyles.emptyCard}>
+                                        <Text style={screenStyles.emptyTitle}>No exercises found</Text>
+                                        <Text style={screenStyles.emptyText}>
+                                            Add exercise library data before adding exercises to a plan.
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <View style={formStyles.exercisePickerOptions}>
+                                        {exercises.map((exercise) => (
+                                    <Pressable
+                                        key={exercise.id}
+                                        style={[
+                                            formStyles.dayChip,
+                                            selectedExerciseId === exercise.id && formStyles.dayChipSelected,
+                                        ]}
+                                        onPress={() => setSelectedExerciseId(exercise.id)}
+                                    >
+                                        <Text
+                                            style={[
+                                                formStyles.dayChipText,
+                                                selectedExerciseId === exercise.id &&
+                                                    formStyles.dayChipTextSelected,
+                                            ]}
+                                        >
+                                            {exercise.name}
+                                        </Text>
+                                    </Pressable>
+                                        ))}
+                                    </View>
+                                )}
+                            </ScrollView>
+                        </View>
+                        
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Target Sets</Text>
+                        <TextInput
+                            value={targetSets}
+                            onChangeText={setTargetSets}
+                            returnKeyType="next"
+                            onSubmitEditing={() => targetRepsInputRef.current?.focus()}
+                            blurOnSubmit={false}
+                            placeholder="Example: 3"
+                            placeholderTextColor={theme.colors.textMuted}
+                            keyboardType="numeric"
+                            style={formStyles.input}
+                        />
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Target Reps</Text>
+                        <TextInput
+                            ref={targetRepsInputRef}
+                            value={targetReps}
+                            onChangeText={setTargetReps}
+                            returnKeyType="next"
+                            onSubmitEditing={() => targetWeightInputRef.current?.focus()}
+                            blurOnSubmit={false}
+                            placeholder="Example: 10"
+                            placeholderTextColor={theme.colors.textMuted}
+                            keyboardType="numeric"
+                            style={formStyles.input}
+                        />
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Target Weight</Text>
+                        <TextInput
+                            ref={targetWeightInputRef}
+                            value={targetWeight}
+                            onChangeText={setTargetWeight}
+                            returnKeyType="next"
+                            onSubmitEditing={() => restSecondsInputRef.current?.focus()}
+                            blurOnSubmit={false}
+                            placeholder="Example: 135"
+                            placeholderTextColor={theme.colors.textMuted}
+                            keyboardType="numeric"
+                            style={formStyles.input}
+                        />
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Rest Seconds</Text>
+                        <TextInput
+                            ref={restSecondsInputRef}
+                            value={targetRestSeconds}
+                            onChangeText={setTargetRestSeconds}
+                            returnKeyType="next"
+                            onSubmitEditing={() => notesInputRef.current?.focus()}
+                            blurOnSubmit={false}
+                            placeholder="Example: 90"
+                            placeholderTextColor={theme.colors.textMuted}
+                            keyboardType="numeric"
+                            style={formStyles.input}
+                        />
+                    </View>
+
+                    <View style={formStyles.field}>
+                        <Text style={formStyles.label}>Notes</Text>
+                        <TextInput
+                            ref={notesInputRef}
+                            value={notes}
+                            onChangeText={setNotes}
+                            returnKeyType="done"
+                            placeholder="Optional notes"
+                            placeholderTextColor={theme.colors.textMuted}
+                            style={[formStyles.input, formStyles.multilineInput]}
+                            multiline
+                        />
+                    </View>
+
+                    {errorMessage ? (
+                        <Text style={formStyles.errorText}>{errorMessage}</Text>
+                    ) : null}
+
+                    <Pressable style={formStyles.submitButton} onPress={handleSubmit}>
+                        <Text style={formStyles.submitButtonText}>Add Exercise</Text>
+                    </Pressable>
                 </View>
-
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Target Reps</Text>
-                    <TextInput
-                        value={targetReps}
-                        onChangeText={setTargetReps}
-                        placeholder="Example: 10"
-                        placeholderTextColor={theme.colors.textMuted}
-                        keyboardType="numeric"
-                        style={formStyles.input}
-                    />
-                </View>
-
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Target Weight</Text>
-                    <TextInput
-                        value={targetWeight}
-                        onChangeText={setTargetWeight}
-                        placeholder="Example: 135"
-                        placeholderTextColor={theme.colors.textMuted}
-                        keyboardType="numeric"
-                        style={formStyles.input}
-                    />
-                </View>
-
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Rest Seconds</Text>
-                    <TextInput
-                        value={targetRestSeconds}
-                        onChangeText={setTargetRestSeconds}
-                        placeholder="Example: 90"
-                        placeholderTextColor={theme.colors.textMuted}
-                        keyboardType="numeric"
-                        style={formStyles.input}
-                    />
-                </View>
-
-                <View style={formStyles.field}>
-                    <Text style={formStyles.label}>Notes</Text>
-                    <TextInput
-                        value={notes}
-                        onChangeText={setNotes}
-                        placeholder="Optional notes"
-                        placeholderTextColor={theme.colors.textMuted}
-                        style={[formStyles.input, formStyles.multilineInput]}
-                        multiline
-                    />
-                </View>
-
-                {errorMessage ? (
-                    <Text style={formStyles.errorText}>{errorMessage}</Text>
-                ) : null}
-
-                <Pressable style={formStyles.submitButton} onPress={handleSubmit}>
-                    <Text style={formStyles.submitButtonText}>Add Exercise</Text>
-                </Pressable>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 

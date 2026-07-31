@@ -1,6 +1,12 @@
 import { useCallback, useState } from 'react';
 import { router, useFocusEffect } from 'expo-router';
-import { Text } from 'react-native';
+import { 
+    Text,
+    View,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform,
+ } from 'react-native';
 
 import { WorkoutPlanForm } from '../../components/workoutPlan/WorkoutPlanForm';
 import type { WorkoutPlanFormValues } from '../../components/workoutPlan/WorkoutPlanForm';
@@ -10,6 +16,7 @@ import { sqliteWorkoutPlanRepository } from '../../src/core/data/repositories/wo
 import { sqlitePlanExerciseRepository } from '../../src/core/data/repositories/planExercise/sqlitePlanExerciseRepository';
 import { sqliteWorkoutTypeRepository } from '../../src/core/data/repositories/workoutType/sqliteWorkoutTypeRepository';
 import { formStyles } from '../../constants/formStyles';
+import { globalStyles as styles } from '../../constants/styles';
 
 const MVP_USER_ID = 1;
 
@@ -56,16 +63,22 @@ export default function CreateWorkoutPlanScreen() {
     }
 
     return (
-        <>
-            <WorkoutPlanForm 
-                initialValues={{}}
-                workoutTypes={workoutTypes}
-                submitLabel="Create Workout Plan"
-                onSubmit={handleSubmit} 
-            />
-            {errorMessage ? (
-                <Text style={formStyles.errorText}>{errorMessage}</Text>
-            ) : null}
-        </>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={120}
+        >
+            <ScrollView style={styles.screen}>
+                <WorkoutPlanForm 
+                    initialValues={{}}
+                    workoutTypes={workoutTypes}
+                    submitLabel="Create Workout Plan"
+                    onSubmit={handleSubmit} 
+                />
+                {errorMessage ? (
+                    <Text style={formStyles.errorText}>{errorMessage}</Text>
+                ) : null}
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
