@@ -17,12 +17,12 @@ export type WorkoutPlanTemplateService = {
     deleteWorkoutPlanTemplate(id: WorkoutPlan["id"]): Promise<void>;
     getWorkoutPlanTemplateById(id: WorkoutPlan["id"]): Promise<WorkoutPlan | null>;
     listWorkoutPlanTemplates(userId: WorkoutPlan["userId"]): Promise<WorkoutPlan[]>;
-
+    listAllPlanExercisesForWorkoutPlan(workoutPlanId: WorkoutPlan["id"]): Promise<PlanExercise[]>;
     addExerciseToWorkoutPlan(input: CreatePlanExerciseInput): Promise<PlanExercise>;
     updatePlanExercise(input: UpdatePlanExerciseInput): Promise<PlanExercise>;
     findPlanExerciseById(id: PlanExercise["id"]): Promise<PlanExercise | null>;
     listPlanExercisesForWorkoutPlan(workoutPlanId: WorkoutPlan["id"]): Promise<PlanExercise[]>;
-    removeExerciseFromWorkoutPlan(id: PlanExercise["id"]): Promise<void>;
+    removeExerciseFromWorkoutPlan(workoutPlanId: WorkoutPlan["id"], id: PlanExercise["id"]): Promise<void>;
     reorderPlanExercises(
         workoutPlanId: WorkoutPlan["id"],
         orderedPlanExerciseIds: PlanExercise["id"][]
@@ -70,8 +70,21 @@ export function createWorkoutPlanTemplateService(
             return planExerciseRepository.listActiveByWorkoutPlanId(workoutPlanId);
         },
 
-        async removeExerciseFromWorkoutPlan(id) {
-            return planExerciseRepository.softDelete(id);
+        async listAllPlanExercisesForWorkoutPlan(workoutPlanId) {
+            return planExerciseRepository.listAllByWorkoutPlanId(workoutPlanId);
+        },
+
+        async removeExerciseFromWorkoutPlan(workoutPlanId, id) {
+            await planExerciseRepository.softDelete(id);
+
+            const activePlanExercises = await planExerciseRepository.listActiveByWorkoutPlanId(workoutPlanId);
+
+            for (let index = 0; index < activePlanExercises.length; index++) {
+                await planExerciseRepository.update({
+                    id: activePlanExercises[index].id,
+                    orderIndex: index,
+                });
+            }
         },
 
         async reorderPlanExercises(workoutPlanId, orderedPlanExerciseIds) {
@@ -86,15 +99,30 @@ export function createWorkoutPlanTemplateService(
             if (!allIdsBelongToWorkoutPlan) {
                 throw new Error("Cannot reorder exercises that do not belong to this workout plan");
             }
-            
-            const updatedPlanExercises = await Promise.all(
-                orderedPlanExerciseIds.map((planExerciseId, index) => {
-                    return planExerciseRepository.update({
-                        id: planExerciseId,
-                        orderIndex: index,
-                    });
-                })
-            );
+
+            const allActiveIdsWereIncluded = orderedPlanExerciseIds.length === existingPlanExercises.length;
+
+            if (!allActiveIdsWereIncluded) {
+                throw new Error("Cannot reorder with missing active exercises");
+            }
+
+            for (let index = 0; index < orderedPlanExerciseIds.length; index++) {
+                await planExerciseRepository.update({
+                    id: orderedPlanExerciseIds[index],
+                    orderIndex: -(index + 1),
+                });
+            }
+
+            const updatedPlanExercises = [];
+
+            for (let index = 0; index < orderedPlanExerciseIds.length; index++) {
+                const updatedPlanExercise = await planExerciseRepository.update({
+                    id: orderedPlanExerciseIds[index],
+                    orderIndex: index,
+                });
+
+                updatedPlanExercises.push(updatedPlanExercise);
+            }
 
             return updatedPlanExercises;
         },

@@ -30,4 +30,5 @@ export type PlanExerciseRepository = {
     hardDelete(id: PlanExercise["id"]): Promise<void>;
     findById(id: PlanExercise["id"]): Promise<PlanExercise | null>;
     listActiveByWorkoutPlanId(id: WorkoutPlan["id"]): Promise<PlanExercise[]>;
+    listAllByWorkoutPlanId(id: WorkoutPlan["id"]): Promise<PlanExercise[]>;
 };

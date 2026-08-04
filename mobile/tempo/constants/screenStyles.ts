@@ -174,4 +174,35 @@ export const screenStyles = StyleSheet.create({
         fontFamily: theme.typography.regular,
         fontSize: theme.fontSize.sm,
     },
+
+    reorderControls: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: theme.spacing.sm,
+    },
+
+    reorderButton: {
+        paddingVertical: theme.spacing.xs,
+        paddingHorizontal: theme.spacing.sm,
+        borderRadius: theme.spacing.md,
+        backgroundColor: theme.colors.surfaceMuted,
+    },
+
+        reorderButtonDisabled: {
+        opacity: 0.35,
+    },
+
+        reorderButtonText: {
+        color: theme.colors.text,
+        fontSize: theme.fontSize.sm,
+        fontFamily: theme.typography.medium,
+    },
+
+    editButton: {
+        alignSelf: "flex-start",
+        backgroundColor: theme.colors.primaryMuted,
+        paddingHorizontal: theme.spacing.md,
+        paddingVertical: theme.spacing.sm,
+        borderRadius: 12,
+    },
 });

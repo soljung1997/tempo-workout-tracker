@@ -188,4 +188,21 @@ export const sqlitePlanExerciseRepository: PlanExerciseRepository = {
 
         return results.map(mapPlanExerciseRow);
     },
+    async listAllByWorkoutPlanId(id) {
+        const results = db.getAllSync<PlanExerciseRow>(
+            `
+                SELECT *
+                FROM plan_exercise
+                WHERE workout_plan_id = ?
+                ORDER BY order_index ASC;
+            `,
+            id
+        );
+
+        if (!results || results.length === 0) {
+            return [];
+        }
+
+        return results.map(mapPlanExerciseRow);
+    }
 };

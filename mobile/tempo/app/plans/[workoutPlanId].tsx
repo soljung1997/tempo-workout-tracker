@@ -41,6 +41,24 @@ export default function WorkoutPlanDetailsScreen() {
             pathname: "/plans/[workoutPlanId]/exercises/add-exercise",
             params: { workoutPlanId: parsedWorkoutPlanId.toString() },
         });
+        }
+
+        async function movePlanExercise(fromIndex: number, toIndex: number) {
+        if (toIndex < 0 || toIndex >= planExercises.length) {
+            return;
+        }
+
+        const nextPlanExercises = [...planExercises];
+        const [movedPlanExercise] = nextPlanExercises.splice(fromIndex, 1);
+
+        nextPlanExercises.splice(toIndex, 0, movedPlanExercise);
+
+        setPlanExercises(nextPlanExercises);
+
+        workoutPlanTemplateService.reorderPlanExercises(
+            parsedWorkoutPlanId,
+            nextPlanExercises.map((planExercise) => planExercise.id)
+        );
     }
 
     const loadWorkoutPlan = useCallback(async () => {
@@ -141,10 +159,14 @@ export default function WorkoutPlanDetailsScreen() {
                     data={planExercises}
                     keyExtractor={(exercise) => exercise.id.toString()}
                     contentContainerStyle={screenStyles.listContent}
-                    renderItem={({ item }) => (
+                    renderItem={({ item, index }) => (
                         <PlanExerciseCard
                             planExercise={item}
                             exercise={exercisesById[item.exerciseId]}
+                            canMoveUp={index > 0}
+                            canMoveDown={index < planExercises.length - 1}
+                            onMoveUp={() => movePlanExercise(index, index - 1)}
+                            onMoveDown={() => movePlanExercise(index, index + 1)}
                             onPress={() =>
                                 router.push({
                                     pathname: "/plans/[workoutPlanId]/exercises/[planExerciseId]/edit",
@@ -179,27 +201,61 @@ export default function WorkoutPlanDetailsScreen() {
 function PlanExerciseCard({
     planExercise,
     exercise,
+    canMoveUp,
+    canMoveDown,
+    onMoveUp,
+    onMoveDown,
     onPress,
 }: {
     planExercise: PlanExercise;
     exercise: Exercise | undefined;
+    canMoveUp: boolean;
+    canMoveDown: boolean;
+    onMoveUp: () => void;
+    onMoveDown: () => void;
     onPress: () => void;
 }) {
     return (
-        <Pressable style={screenStyles.planCard} onPress={onPress}>
+        <View style={screenStyles.planCard}>
             <View style={screenStyles.planCardHeader}>
                 <Text style={screenStyles.planName}>
                     {exercise?.name?? `Exercise #${planExercise.exerciseId}`}
                 </Text>
-                <Text style={screenStyles.openText}>Edit</Text>
-            </View>
+                <Pressable style={screenStyles.editButton} onPress={onPress}>
+                <Text style={screenStyles.planDescription}>
+                    Edit
+                </Text>
+            </Pressable>
+                <View style={screenStyles.reorderControls}>
+                    <Pressable 
+                    disabled={!canMoveUp} 
+                    style={[
+                        screenStyles.reorderButton,
+                        !canMoveUp && screenStyles.reorderButtonDisabled,
+                    ]}
+                    onPress={onMoveUp}>
+                        <Text style={screenStyles.reorderButtonText}>Up</Text>
+                    </Pressable>
 
-            <View style={screenStyles.metadataRow}>
-                <MetadataPill label={`${planExercise.targetSets ?? "-"} sets`} />
-                <MetadataPill label={`${planExercise.targetReps ?? "-"} reps`} />
-                <MetadataPill label={`${planExercise.targetRestSeconds ?? "-"} sec rest`} />
+                    <Pressable 
+                    disabled={!canMoveDown} 
+                    style={[
+                        screenStyles.reorderButton,
+                        !canMoveDown && screenStyles.reorderButtonDisabled,
+                    ]}
+                    onPress={onMoveDown}>
+                        <Text style={screenStyles.reorderButtonText}>Down</Text>
+                    </Pressable>
+                </View>
+                
             </View>
-        </Pressable>
+        
+            
+            <Text style={screenStyles.planDescription}>
+                {planExercise.targetSets ?? "-"} sets ·{" "}
+                {planExercise.targetReps ?? "-"} reps
+            </Text>
+        </View>
     );
 }
 

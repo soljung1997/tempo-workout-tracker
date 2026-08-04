@@ -78,13 +78,15 @@ export default function AddExerciseToWorkoutPlanScreen() {
         setErrorMessage(null);
 
         try {
-            const existingPlanExercises =
-                await workoutPlanTemplateService.listPlanExercisesForWorkoutPlan(parsedWorkoutPlanId);
+            const allPlanExercises =
+                await workoutPlanTemplateService.listAllPlanExercisesForWorkoutPlan(parsedWorkoutPlanId);
+
+            const nextOrderIndex = allPlanExercises.length === 0 ? 0 : Math.max(...allPlanExercises.map((exercise) => exercise.orderIndex)) + 1;
 
             await workoutPlanTemplateService.addExerciseToWorkoutPlan({
                 workoutPlanId: parsedWorkoutPlanId,
                 exerciseId: selectedExerciseId,
-                orderIndex: existingPlanExercises.length,
+                orderIndex: nextOrderIndex,
                 targetSets: parseOptionalNumber(targetSets),
                 targetReps: parseOptionalNumber(targetReps),
                 targetWeight: parseOptionalNumber(targetWeight),

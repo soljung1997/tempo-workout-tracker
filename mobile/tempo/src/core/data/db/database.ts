@@ -143,8 +143,7 @@ const createPlanExerciseTableSql = `
         updated_at TEXT NOT NULL,
 
         FOREIGN KEY (workout_plan_id) REFERENCES workout_plan(workout_plan_id) ON DELETE CASCADE,
-        FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id) ON DELETE CASCADE,
-        UNIQUE (workout_plan_id, order_index)
+        FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id) ON DELETE CASCADE
     );
 `;
 
@@ -421,36 +420,40 @@ function seedWorkoutTypes() {
 }
 
 const createIndexesSql = `
-  CREATE INDEX IF NOT EXISTS idx_exercise_user_id
-    ON exercise(user_id);
+    CREATE INDEX IF NOT EXISTS idx_exercise_user_id
+        ON exercise(user_id);
 
-  CREATE INDEX IF NOT EXISTS idx_exercise_category_user_id
-    ON exercise_category(user_id);
+    CREATE INDEX IF NOT EXISTS idx_exercise_category_user_id
+        ON exercise_category(user_id);
 
-  CREATE INDEX IF NOT EXISTS idx_muscle_group_user_id
-    ON muscle_group(user_id);
+    CREATE INDEX IF NOT EXISTS idx_muscle_group_user_id
+        ON muscle_group(user_id);
 
-  CREATE INDEX IF NOT EXISTS idx_workout_plan_user_id
-    ON workout_plan(user_id);
+    CREATE INDEX IF NOT EXISTS idx_workout_plan_user_id
+        ON workout_plan(user_id);
 
-  CREATE INDEX IF NOT EXISTS idx_plan_exercise_workout_plan_id
-    ON plan_exercise(workout_plan_id);
+    CREATE INDEX IF NOT EXISTS idx_plan_exercise_workout_plan_id
+        ON plan_exercise(workout_plan_id);
 
-  CREATE INDEX IF NOT EXISTS idx_workout_session_user_id
-    ON workout_session(user_id);
+    CREATE INDEX IF NOT EXISTS idx_workout_session_user_id
+        ON workout_session(user_id);
 
-  CREATE INDEX IF NOT EXISTS
-  idx_workout_type_user_id
-    ON workout_type(user_id);
+    CREATE INDEX IF NOT EXISTS
+    idx_workout_type_user_id
+        ON workout_type(user_id);
 
-  CREATE INDEX IF NOT EXISTS idx_workout_plan_workout_type_id
-    ON workout_plan(workout_type_id);
+    CREATE INDEX IF NOT EXISTS idx_workout_plan_workout_type_id
+        ON workout_plan(workout_type_id);
 
-  CREATE INDEX IF NOT EXISTS idx_session_exercise_workout_session_id
-    ON session_exercise(workout_session_id);
+    CREATE INDEX IF NOT EXISTS idx_session_exercise_workout_session_id
+        ON session_exercise(workout_session_id);
 
-  CREATE INDEX IF NOT EXISTS idx_set_log_session_exercise_id
-    ON set_log(session_exercise_id);
+    CREATE INDEX IF NOT EXISTS idx_set_log_session_exercise_id
+        ON set_log(session_exercise_id);
+
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_plan_exercise_active_order
+        ON plan_exercise(workout_plan_id, order_index)
+        WHERE is_active = 1;
 `;
 
 export function initializeDatabase() {

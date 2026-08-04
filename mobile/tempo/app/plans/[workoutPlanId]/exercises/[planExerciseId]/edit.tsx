@@ -30,8 +30,12 @@ const workoutPlanTemplateService = createWorkoutPlanTemplateService(
 const exerciseService = createExerciseService(sqliteExerciseRepository);
 
 export default function EditPlanExerciseScreen() {
-    const { planExerciseId } = useLocalSearchParams<{ planExerciseId: string }>();
+    const { workoutPlanId ,planExerciseId } = useLocalSearchParams<{
+        workoutPlanId: string;
+        planExerciseId: string 
+    }>();
     const parsedPlanExerciseId = Number(planExerciseId);
+    const parsedWorkoutPlanId = Number(workoutPlanId);
 
     const [planExercise, setPlanExercise] = useState<PlanExercise | null>(null);
     const [exercise, setExercise] = useState<Exercise | null>(null);
@@ -110,9 +114,11 @@ export default function EditPlanExerciseScreen() {
         }
 
         setErrorMessage(null);
-
+        
         try {
-            await workoutPlanTemplateService.removeExerciseFromWorkoutPlan(planExercise.id);
+            await workoutPlanTemplateService.removeExerciseFromWorkoutPlan(
+                parsedWorkoutPlanId, parsedPlanExerciseId
+            );
             router.back();
         } catch (error) {
             console.error(error);
