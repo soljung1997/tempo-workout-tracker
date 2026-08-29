@@ -32,7 +32,7 @@ function seedMvpUser() {
     const now = new Date().toISOString();
     
     db.runSync(
-        `
+        /* sql */ `
             INSERT INTO user (
                 user_id,
                 display_name,
@@ -52,7 +52,7 @@ function seedMvpUser() {
     );
 }
 
-const createUserTableSql = `
+const createUserTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS user (
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
         display_name TEXT NOT NULL,
@@ -71,7 +71,7 @@ const createUserTableSql = `
     );
 `;
 
-const createExerciseTableSql = `
+const createExerciseTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS exercise (
         exercise_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -95,7 +95,7 @@ const createExerciseTableSql = `
     );
 `;
 
-const createExerciseCategoryTableSql = `
+const createExerciseCategoryTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS exercise_category (
         exercise_category_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -111,7 +111,7 @@ const createExerciseCategoryTableSql = `
     );
 `;
 
-const createMuscleGroupTableSql = `
+const createMuscleGroupTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS muscle_group (
         muscle_group_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -127,7 +127,7 @@ const createMuscleGroupTableSql = `
     );
 `;
 
-const createPlanExerciseTableSql = `
+const createPlanExerciseTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS plan_exercise (
         plan_exercise_id INTEGER PRIMARY KEY AUTOINCREMENT,
         workout_plan_id INTEGER NOT NULL,
@@ -147,7 +147,7 @@ const createPlanExerciseTableSql = `
     );
 `;
 
-const createSessionExerciseTableSql = `
+const createSessionExerciseTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS session_exercise (
         session_exercise_id INTEGER PRIMARY KEY AUTOINCREMENT,
         workout_session_id INTEGER NOT NULL,
@@ -166,7 +166,7 @@ const createSessionExerciseTableSql = `
     );
 `;
 
-const createSetLogTableSql = `
+const createSetLogTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS set_log (
         set_log_id INTEGER PRIMARY KEY AUTOINCREMENT,
         session_exercise_id INTEGER NOT NULL,
@@ -188,7 +188,7 @@ const createSetLogTableSql = `
     );
 `;
 
-const createWorkoutTypeTableSql = `
+const createWorkoutTypeTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS workout_type (
         workout_type_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -204,7 +204,7 @@ const createWorkoutTypeTableSql = `
     );
 `;
 
-const createWorkoutPlanTableSql = `
+const createWorkoutPlanTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS workout_plan (
         workout_plan_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
@@ -226,7 +226,7 @@ const createWorkoutPlanTableSql = `
     );
 `;
 
-const createWorkoutSessionTableSql = `
+const createWorkoutSessionTableSql = /* sql */ `
     CREATE TABLE IF NOT EXISTS workout_session (
         workout_session_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
@@ -250,6 +250,35 @@ const createWorkoutSessionTableSql = `
     );
 `;
 
+const createPlannedWorkoutTableSql = /* sql */ `
+    CREATE TABLE IF NOT EXISTS planned_workout (
+        planned_workout_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        workout_plan_id INTEGER NOT NULL,
+        planned_date TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'planned' CHECK (
+            status IN (
+                'planned', 
+                'in_progress', 
+                'completed', 
+                'missed', 
+                'cancelled'
+            )    
+        ),
+        notes TEXT,
+        is_active INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+
+        FOREIGN KEY (user_id) 
+            REFERENCES user(user_id) 
+            ON DELETE CASCADE,
+        FOREIGN KEY (workout_plan_id) 
+            REFERENCES workout_plan(workout_plan_id) 
+            ON DELETE CASCADE
+);
+`
+
 function seedExerciseCategories() {
     const now = new Date().toISOString();
 
@@ -257,7 +286,7 @@ function seedExerciseCategories() {
         const normalizedName = normalizeName(category.name);
 
         db.runSync(
-            `
+            /* sql */ `
                 INSERT INTO exercise_category (
                 user_id,
                 name,
@@ -291,7 +320,7 @@ function seedMuscleGroups() {
         const normalizedName = normalizeName(muscleGroup.name);
 
         db.runSync(
-            `
+            /* sql */ `
                 INSERT INTO muscle_group (
                 user_id,
                 name,
@@ -349,7 +378,7 @@ function seedExercises() {
         }
 
         db.runSync(
-            `
+            /* sql */ `
                 INSERT INTO exercise (
                 user_id,
                 name,
@@ -392,7 +421,7 @@ function seedWorkoutTypes() {
         const normalizedName = normalizeName(workoutType.name);
 
         db.runSync(
-            `
+            /* sql */ `
                 INSERT INTO workout_type (
                 user_id,
                 name,
@@ -419,7 +448,7 @@ function seedWorkoutTypes() {
     }
 }
 
-const createIndexesSql = `
+const createIndexesSql = /* sql */ `
     CREATE INDEX IF NOT EXISTS idx_exercise_user_id
         ON exercise(user_id);
 
@@ -451,6 +480,12 @@ const createIndexesSql = `
     CREATE INDEX IF NOT EXISTS idx_set_log_session_exercise_id
         ON set_log(session_exercise_id);
 
+    CREATE INDEX IF NOT EXISTS idx_planned_workout_user_date
+        ON planned_workout(user_id, planned_date);
+
+    CREATE INDEX IF NOT EXISTS idx_planned_workout_plan_id
+        ON planned_workout(workout_plan_id);
+
     CREATE UNIQUE INDEX IF NOT EXISTS idx_plan_exercise_active_order
         ON plan_exercise(workout_plan_id, order_index)
         WHERE is_active = 1;
@@ -472,6 +507,7 @@ export function initializeDatabase() {
     db.execSync(createWorkoutSessionTableSql);
     db.execSync(createSessionExerciseTableSql);
     db.execSync(createSetLogTableSql);
+    db.execSync(createPlannedWorkoutTableSql);
 
     db.execSync(createIndexesSql);
     db.withTransactionSync(() => {

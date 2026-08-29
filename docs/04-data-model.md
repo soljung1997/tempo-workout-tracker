@@ -16,6 +16,7 @@
 | Exercise | A reusable movement definition such as Bench Press or Squat |
 | Workout Plan | A reusable workout template for a day or session |
 | Plan Exercise | A specific exercise entry inside a workout plan |
+| Planned Workout | A workout scheduled for specific or recurring dates in the calendar |
 | Workout Session | One performed workout instance on a specific date/time |
 | Session Exercise | A performed exercise inside a workout session |
 | Set Log | One performed set with reps, weight, and optional notes |
@@ -142,7 +143,30 @@ Represents one exercise inside a workout plan.
 
 ---
 
-### E. WorkoutSession
+### E. PlannedWorkout
+Represents a scheduled workout to be used for calendar planning
+
+**Fields**
+- planned_workout_id (PK)
+- user_id (FK -> User.user_id)
+- workout_plan_id (FK -> WorkoutPlan.workout_plan_id)
+- planned_date
+- status
+- notes
+- is_active
+- created_at
+- updated_at
+
+**Notes**
+- `planned_date` is stored as a device-local `YYYY-MM-DD` calendar date.
+- MVP planned workout statuses are `planned`, `in_progress`, `completed`, `missed`, and `cancelled`.
+- Planned workouts do not store time-of-day in MVP.
+- One `PlannedWorkout` represents one scheduled workout on one date.
+- Full recurrence generation is deferred.
+
+---
+
+### F. WorkoutSession
 Represents one actual workout performed by the user.
 
 **Fields**
@@ -167,7 +191,7 @@ Represents one actual workout performed by the user.
 
 ---
 
-### F. SessionExercise
+### G. SessionExercise
 Represents one performed exercise inside a workout session.
 
 **Fields**
@@ -189,7 +213,7 @@ Represents one performed exercise inside a workout session.
 
 ---
 
-### G. SetLog
+### H. SetLog
 Represents one performed set for a session exercise.
 
 **Fields**
@@ -212,7 +236,7 @@ Represents one performed set for a session exercise.
 - Keep it simple in v1.
 - `rpe` is optional but very useful if you want progression logic later.
 
-### H. MuscleGroup
+### I. MuscleGroup
 
 **Fields**
 - muscle_group_id (PK)
@@ -225,7 +249,7 @@ Represents one performed set for a session exercise.
 - updated_at
 
 
-### I. Category
+### J. Category
 
 **Fields**
 - exercise_category_id (PK)
@@ -237,7 +261,7 @@ Represents one performed set for a session exercise.
 - created_at
 - updated_at
 
-### J. WorkoutType
+### K. WorkoutType
 
 **Fields**
 - workout_type_id
