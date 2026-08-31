@@ -13,8 +13,8 @@ export type CreatePlannedWorkoutInput = {
 export type UpdatePlannedWorkoutInput = {
     id: PlannedWorkout["id"];
     workoutPlanId?: WorkoutPlan["id"];
-    plannedDate: string;
-    status: PlannedWorkout["status"];
+    plannedDate?: string;
+    status?: PlannedWorkout["status"];
     notes?: string;
 };
 
