@@ -14,6 +14,7 @@ Ideas and deferred improvements that are intentionally out of scope for the MVP.
 - Define behavior for skipped and missed recurring workouts.
 - Add optional workout reminders.
 - Add calendar indicators for planned, completed, missed, and rest days.
+- Use and verify date/date-range planned-workout queries when calendar data loading requires scoped queries.
 
 *Tracked in #46.*
 

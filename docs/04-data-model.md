@@ -325,11 +325,15 @@ For tracking best lifts.
 - One **WorkoutSession** can have many **SessionExercises**
 - One **SessionExercise** can have many **SetLogs**
 - One **Exercise** can be referenced by many **SessionExercises**
+- One **User** can have many **PlannedWorkouts**
+- One **WorkoutPlan** can have many **PlannedWorkouts**
 
 ### Relationship Summary
 - User 1 -> N WorkoutPlan
 - User 1 -> N WorkoutSession
+- User 1 -> N PlannedWorkout
 - WorkoutPlan 1 -> N PlanExercise
+- WorkoutPlan 1 -> N PlannedWorkout
 - Exercise 1 -> N PlanExercise
 - WorkoutSession 1 -> N SessionExercise
 - SessionExercise 1 -> N SetLog

@@ -65,6 +65,7 @@ tempo-workout-tracker/
         +html.tsx
         +not-found.tsx
         modal.tsx
+        planned-workout.tsx
         (tabs)/
           _layout.tsx
           index.tsx
@@ -72,9 +73,19 @@ tempo-workout-tracker/
           workout.tsx
           history.tsx
           settings.tsx
+        plans/
+          create.tsx
+          [workoutPlanId].tsx
+          [workoutPlanId]/edit.tsx
+          [workoutPlanId]/exercises/
       assets/
       components/
+        calendar/
       constants/
+      src/
+        core/
+          data/
+          domain/
       node_modules/
       app.json
       package.json
@@ -89,9 +100,11 @@ tempo-workout-tracker/
 - `app/(tabs)/history.tsx` = Completed workout history
 - `app/(tabs)/settings.tsx` = App preferences/settings
 - `app/(tabs)/_layout.tsx` = Main bottom tab navigation
+- `app/planned-workout.tsx` = Create/edit/cancel planned workout flow
+- `app/plans/` = Workout-plan creation, detail, editing, and plan-exercise routes
 - `app/_layout.tsx` = Root Expo Router layout
 
-## Planned source folder structure
+## Core source folder structure
 ```text
 mobile/tempo/src/
   core/
@@ -117,8 +130,8 @@ mobile/tempo/src/
 ## MVP must-haves from product brief
 - CRUD workout plans/templates
 - Workout type tagging for analytics/calendar indicators
-- Schedule planned workouts for calendar
-- Optional recurrence for planned workouts
+- Schedule individual planned workouts on device-local calendar dates
+- Create, edit, and cancel planned workouts
 - Start planned workout
 - Resume or discard in-progress session safely
 - Log sets/reps/weights
@@ -131,6 +144,8 @@ mobile/tempo/src/
 - Month calendar indicators
 - Basic graphs/analytics from history
 - Offline storage with no account required
+
+Recurring workout generation is deferred beyond the MVP scheduling foundation. The MVP stores one `PlannedWorkout` for one device-local `YYYY-MM-DD` date and does not store a planned time of day.
 
 ## Home metrics rules
 ### Metric A
@@ -177,13 +192,11 @@ mobile/tempo/src/
 - Confirmed navigation between placeholder screens works
 - Removed/ignored default starter tab screen such as `two.tsx`
 
-## Current foundation status
+## Current implementation status
 
-M1-I1 establishes the app foundation and offline data-layer base.
+Completed foundation, template-management, and scheduling work:
 
-Completed foundation work:
-
-- Expo Router tab shell with placeholder screens:
+- Expo Router tab shell with five main screens:
   - Dashboard
   - Plans
   - Workout
@@ -202,22 +215,33 @@ Completed foundation work:
   - workout_session
   - session_exercise
   - set_log
+  - planned_workout
 - Default lookup seed data added for:
   - exercise categories
   - muscle groups
+  - workout types
+  - exercises
 - Domain model types added under `src/core/domain/models`
-- Repository contracts and SQLite implementation skeletons added under `src/core/data/repositories`
+- Repository contracts and SQLite implementations support the completed template and scheduling flows
+- Domain services implemented for exercise templates, workout-plan templates, and planned workouts
+- Workout-plan UI supports creating and editing plans and managing their exercises
+- Dashboard month calendar supports month navigation, date selection, and planned-workout indicators
+- Planned-workout UI supports selecting a workout plan, choosing a date, adding notes, editing an existing scheduled workout, and cancelling it
+- Dashboard data reloads when the screen regains focus so scheduling changes appear after navigation
 - Offline-first persistence conventions documented
 - Shared theme/style foundation added under `mobile/tempo/constants/styles.ts`
-- Manual database smoke verification completed and documented in `docs/database-smoke-verification.md`
+- Manual database smoke verification is documented in `docs/database-smoke-verification.md`
 
 Current implementation boundaries:
 
 - Expo SQLite is the MVP local source of truth.
-- Repository implementation methods are currently skeletons/placeholders.
-- Full repository SQL behavior is deferred to later milestones.
-- Services/use-cases are not implemented yet.
-- MVP feature screens are still placeholders.
+- MVP uses one seeded local user with ID `1`; account and login functionality are not implemented.
+- Planned workouts store a device-local `YYYY-MM-DD` date without time-of-day.
+- New planned workouts begin with `planned` status; cancellation changes the status to `cancelled`.
+- Starting, completing, and automatically marking planned workouts missed are deferred to workout-session functionality.
+- Recurrence generation, recurrence exceptions, and reminders are deferred and tracked in `docs/v2-backlog.md`.
+- `listPlannedWorkoutsForDate()` and `listPlannedWorkoutsForDateRange()` exist but are not used by the current MVP UI; their direct runtime verification is deferred until a feature uses those query paths.
+- Workout-session execution, set logging, history, metrics, and analytics remain future implementation work.
 - Cloud sync, accounts, conflict resolution, export/backup, and automated database tests are deferred.
 
 Important correction:
