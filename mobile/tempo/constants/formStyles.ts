@@ -75,6 +75,10 @@ export const formStyles = StyleSheet.create({
         marginTop: theme.spacing.sm,
     },
 
+    submitButtonDisabled: {
+        opacity: 0.45,
+    },
+
     submitButtonText: {
         color: theme.colors.background,
         fontFamily: theme.typography.medium,
@@ -108,6 +112,6 @@ export const formStyles = StyleSheet.create({
     },
 
     scrollContent: {
-        paddingBottom: theme.spacing.xxxl ?? 64,
+        paddingBottom: theme.spacing.x3l ?? 64,
     },
 });

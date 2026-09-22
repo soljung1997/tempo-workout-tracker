@@ -25,7 +25,8 @@ export const theme = {
         lg: 24,
         xl: 32,
         xxl: 48,
-        xxxl: 64,
+        x3l: 64,
+        x4l: 128,
         screenPadding: 24,
     },
 

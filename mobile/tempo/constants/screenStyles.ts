@@ -59,6 +59,20 @@ export const screenStyles = StyleSheet.create({
         fontSize: theme.fontSize.sm,
     },
 
+    deleteButton: {
+        backgroundColor: theme.colors.danger,
+        paddingHorizontal: theme.spacing.md,
+        paddingVertical: theme.spacing.md,
+        borderRadius: 12,
+        alignItems: "center",
+    },
+
+    deleteButtonText: {
+        color: theme.colors.background,
+        fontFamily: theme.typography.medium,
+        fontSize: theme.fontSize.sm,
+    },
+
     emptyCard: {
         backgroundColor: theme.colors.surface,
         borderColor: theme.colors.border,
