@@ -8,10 +8,14 @@ Ideas and deferred improvements that are intentionally out of scope for the MVP.
   - Current MVP uses a single optional `workoutDay` field.
   - V2 may need a `workout_plan_day` join table or a fuller scheduling model.
 
-## Scheduling And Calendar
+## Scheduling and Calendar
 
-- Add recurring workout schedules.
+- Add recurring workout schedules, including recurrence rules and exceptions.
+- Define behavior for skipped and missed recurring workouts.
+- Add optional workout reminders.
 - Add calendar indicators for planned, completed, missed, and rest days.
+
+*Tracked in #46.*
 
 ## Analytics
 

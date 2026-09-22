@@ -16,7 +16,7 @@
 | Exercise | A reusable movement definition such as Bench Press or Squat |
 | Workout Plan | A reusable workout template for a day or session |
 | Plan Exercise | A specific exercise entry inside a workout plan |
-| Planned Workout | A workout scheduled for specific or recurring dates in the calendar |
+| Planned Workout | One workout scheduled for one specific calendar date |
 | Workout Session | One performed workout instance on a specific date/time |
 | Session Exercise | A performed exercise inside a workout session |
 | Set Log | One performed set with reps, weight, and optional notes |
@@ -163,6 +163,8 @@ Represents a scheduled workout to be used for calendar planning
 - Planned workouts do not store time-of-day in MVP.
 - One `PlannedWorkout` represents one scheduled workout on one date.
 - Full recurrence generation is deferred.
+
+*Scheduling-boundary decisions tracked in #46.*
 
 ---
 
