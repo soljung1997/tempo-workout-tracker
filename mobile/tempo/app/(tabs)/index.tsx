@@ -144,7 +144,9 @@ export default function DashboardScreen() {
           plannedWorkouts={visiblePlannedWorkouts}
           onSelectDate={setSelectedDate}
         />
-        {errorMessage ? (
+        {isLoading ? (
+          <Text style={screenStyles.emptyText}>Loading Workouts...</Text>
+        ) : errorMessage ? (
           <View>
             <Text style={screenStyles.errorText}>
               {errorMessage}
@@ -159,8 +161,7 @@ export default function DashboardScreen() {
               </Text>
             </Pressable>
           </View>
-        ) : null}
-        <SelectedDayPanel
+        ) : (<SelectedDayPanel
           dateLabel={selectedDate.toLocaleDateString(undefined, {
             weekday: "long",
             month: "long",
@@ -184,7 +185,7 @@ export default function DashboardScreen() {
             });
           }}
         />
-        {/* Workouts for the selected date */}
+        )}
     </View>
   );
 }
