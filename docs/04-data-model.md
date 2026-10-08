@@ -160,9 +160,14 @@ Represents a scheduled workout to be used for calendar planning
 **Notes**
 - `planned_date` is stored as a device-local `YYYY-MM-DD` calendar date.
 - MVP planned workout statuses are `planned`, `in_progress`, `completed`, `missed`, and `cancelled`.
+- Starting a planned workout changes its status to `in_progress`.
+- A planned workout may be removed if it has no linked in-progress or completed session.
+- Removal preserves any linked discarded sessions.
+- Planned workouts linked to an in-progress or completed session cannot be removed.
 - Planned workouts do not store time-of-day in MVP.
 - One `PlannedWorkout` represents one scheduled workout on one date.
 - Full recurrence generation is deferred.
+- Opening a preview does not create a session or change a planned workout's status.
 
 *Scheduling-boundary decisions tracked in #46.*
 
@@ -175,6 +180,7 @@ Represents one actual workout performed by the user.
 - workout_session_id (PK)
 - user_id (FK -> User.user_id)
 - workout_plan_id (FK -> WorkoutPlan.workout_plan_id, nullable)
+- planned_workout_id (FK -> PlannedWorkout.planned_workout_id, nullable)
 - session_name
 - session_date
 - start_time
@@ -190,6 +196,16 @@ Represents one actual workout performed by the user.
 **Notes**
 - `workout_plan_id` is nullable so the user can do an unplanned/free workout.
 - `session_name` can snapshot the plan name or store a custom name.
+- Each local user may have at most one `in_progress` session.
+- `session_date` is the device-local date of the actual workout start.
+- Resuming a workout preserves the original start time and snapshots.
+- An in-progress planned workout cannot have its assigned plan or date changed and cannot be cancelled or removed until its session is discarded or completed.
+- `WorkoutSession` statuses are `in_progress`, `completed`, and `discarded`.
+- Discarding a session sets its status to `discarded`.
+- Its linked planned workout returns to `planned`.
+- Discard requires explicit user confirmation.
+
+*Issue 4 lifecycle fields and rules are pending implementation in #49.*
 
 ---
 
@@ -203,6 +219,10 @@ Represents one performed exercise inside a workout session.
 - exercise_name_snapshot
 - category_name_snapshot
 - muscle_group_name_snapshot
+- target_sets
+- target_reps
+- target_weight
+- target_rest_seconds
 - order_index
 - notes
 - created_at
@@ -212,6 +232,7 @@ Represents one performed exercise inside a workout session.
 - `exercise_name_snapshot` is strongly recommended.
 - This protects workout history if the user later renames or edits the master Exercise.
 - Category and muscle group snapshots are optional but useful for future analytics.
+- Exercise targets are copied when the session starts and remain unchanged if the source template is edited.
 
 ---
 
@@ -337,6 +358,7 @@ For tracking best lifts.
 - Exercise 1 -> N PlanExercise
 - WorkoutSession 1 -> N SessionExercise
 - SessionExercise 1 -> N SetLog
+- PlannedWorkout 1 -> N WorkoutSession
 
 ---
 
@@ -367,6 +389,9 @@ For tracking best lifts.
 ### Session Creation Rule
 - A `WorkoutSession` may optionally be created from a `WorkoutPlan`.
 - When this happens, the plan structure is copied into `SessionExercise` and then executed as historical data.
+
+### Workout Preview Rule
+- Opening a preview does not create a `WorkoutSession`.
 
 ### Ordering Rule
 - `order_index` should be stored in both:

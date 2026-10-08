@@ -266,12 +266,21 @@ that works fully offline for v1.0.
 - TBD
 
 **C. Functional Requirements**
-- Start planned workout rules (single planned → auto start; multiple → select; none → select/disable per chosen rule)
-- Resume/discard confirmation to prevent accidental loss
+- Selecting a planned workout opens a preview through **Open Workout**.
+- A session is created only after the user presses **Start Workout**.
+- When an in-progress session exists, **Resume Workout** opens that session.
+- Discarding a session requires confirmation.
 
 **D. Rules / Edge Cases**
 - No silent overwrite of an in-progress session
 - App kill/restart → can resume with saved sets intact
+- New sessions can start only from active workout-plan templates.
+- A new session cannot start while the user has an in-progress session.
+- A plan must contain at least one active plan exercise before a session can start.
+- Removed planned workouts are unavailable for starting.
+- Cancelled or completed planned workouts cannot start a new session.
+- Completed workout sessions are retained for history and metrics.
+- Users may also select an active workout-plan template directly and open its preview without a planned workout.
 
 **E. Acceptance Criteria**
 - TBD

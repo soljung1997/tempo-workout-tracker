@@ -10,7 +10,7 @@ User-editable lookup data should generally use `is_active` instead of hard delet
 
 ## Hard Delete
 
-Hard delete is only to be used for user account deletion related processes, and means the complete and irreversible deletion of data.
+Hard deletion is permitted for account deletion and removal of a planned workout with no linked in-progress or completed session. Removing a planned workout must preserve any linked discarded session records.
 
 ## is_active
 
