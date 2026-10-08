@@ -1,0 +1,36 @@
+name: Tempo CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    name: TypeScript check
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: mobile/tempo
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: mobile/tempo/package-lock.json
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Check TypeScript
+        run: npx tsc --noEmit
