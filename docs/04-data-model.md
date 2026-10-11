@@ -204,6 +204,9 @@ Represents one actual workout performed by the user.
 - Discarding a session sets its status to `discarded`.
 - Its linked planned workout returns to `planned`.
 - Discard requires explicit user confirmation.
+- A session may start directly from a workout-plan template without a planned workout.
+- `planned_workout_id` is populated only when starting from a scheduled occurrence.
+- Starting directly from a template does not create a planned workout.
 
 *Issue 4 lifecycle fields and rules are pending implementation in #49.*
 

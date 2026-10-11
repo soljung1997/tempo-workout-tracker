@@ -1,14 +1,20 @@
 import type { User } from "../../../domain/models/user";
 import type { WorkoutPlan } from "../../../domain/models/workoutPlan";
 import type { WorkoutSession } from "../../../domain/models/workoutSession";
+import type { PlannedWorkout } from "../../../domain/models/plannedWorkout";
 
 export type CreateWorkoutSessionInput = {
     userId: User["id"];
     workoutPlanId?: WorkoutPlan["id"];
+    plannedWorkoutId?: PlannedWorkout["id"];
     sessionName: string;
     sessionDate: string;
     startTime: string;
+    durationSeconds?: number;
+    energyRating?: number;
+    difficultyRating?: number;
     notes?: string;
+    status: string;
 };
 
 export type UpdateWorkoutSessionInput = {
