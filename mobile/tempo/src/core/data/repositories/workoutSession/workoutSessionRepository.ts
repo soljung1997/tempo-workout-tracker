@@ -10,18 +10,12 @@ export type CreateWorkoutSessionInput = {
     sessionName: string;
     sessionDate: string;
     startTime: string;
-    durationSeconds?: number;
-    energyRating?: number;
-    difficultyRating?: number;
     notes?: string;
-    status: string;
 };
 
 export type UpdateWorkoutSessionInput = {
     id: WorkoutSession["id"];
     sessionName?: string;
-    sessionDate?: string;
-    startTime?: string;
     endTime?: string;
     durationSeconds?: number;
     energyRating?: number;

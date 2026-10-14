@@ -11,43 +11,6 @@ function normalizeName(name: string): string {
     return name.trim().toLowerCase();
 }
 
-function addWorkoutTypeIdToWorkoutPlanIfNeeded() {
-    const columns = db.getAllSync<{ name: string }>(
-        `PRAGMA table_info(workout_plan);`
-    );
-
-    const hasWorkoutTypeId = columns.some((column) => {
-        return column.name === "workout_type_id";
-    });
-
-    if (!hasWorkoutTypeId) {
-        db.execSync(`
-            ALTER TABLE workout_plan
-            ADD COLUMN workout_type_id INTEGER
-                REFERENCES workout_type(workout_type_id);
-        `);
-    }
-}
-
-function addPlannedWorkoutIdToWorkoutSessionIfNeeded() {
-    const columns = db.getAllSync<{ name: string }>(
-        `PRAGMA table_info(workout_session);`
-    );
-
-    const hasPlannedWorkoutId = columns.some((column) => {
-        return column.name === "planned_workout_id";
-    });
-
-    if (!hasPlannedWorkoutId) {
-        db.execSync(`
-            ALTER TABLE workout_session
-            ADD COLUMN planned_workout_id INTEGER
-                REFERENCES planned_workout(planned_workout_id)
-                ON DELETE SET NULL;    
-        `);
-    }
-}
-
 function seedMvpUser() {
     const now = new Date().toISOString();
     
@@ -177,7 +140,7 @@ const createSessionExerciseTableSql = /* sql */ `
         muscle_group_name_snapshot TEXT,
         target_sets INTEGER,
         target_reps INTEGER,
-        target_weight INTEGER,
+        target_weight REAL,
         target_rest_seconds INTEGER,
         order_index INTEGER NOT NULL,
         notes TEXT,
@@ -526,9 +489,6 @@ export function initializeDatabase() {
     db.execSync(createWorkoutTypeTableSql);
     db.execSync(createExerciseTableSql);
     db.execSync(createWorkoutPlanTableSql);
-
-    addWorkoutTypeIdToWorkoutPlanIfNeeded();
-    addPlannedWorkoutIdToWorkoutSessionIfNeeded();
 
     db.execSync(createPlanExerciseTableSql);
     db.execSync(createWorkoutSessionTableSql);

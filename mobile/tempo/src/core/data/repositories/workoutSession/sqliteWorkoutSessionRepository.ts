@@ -1,4 +1,4 @@
-import type { CreateWorkoutSessionInput, UpdateWorkoutSessionInput, WorkoutSessionRepository } from "./workoutSessionRepository";
+import type { WorkoutSessionRepository } from "./workoutSessionRepository";
 import type { WorkoutSession } from "../../../domain/models/workoutSession";
 import { db } from "../../db/database";
 
@@ -84,22 +84,107 @@ export const sqliteWorkoutSessionRepository:WorkoutSessionRepository = {
     },
 
     async update(input) {
-        throw new Error("Not Implemented");
+        const now = new Date().toISOString();
+
+        db.runSync(
+            `
+                UPDATE workout_session
+                SET session_name = COALESCE(?, session_name),
+                    end_time = COALESCE(?, end_time),
+                    duration_seconds = COALESCE(?, duration_seconds),
+                    energy_rating = COALESCE(?, energy_rating),
+                    difficulty_rating = COALESCE(?, difficulty_rating),
+                    notes = COALESCE(?, notes),
+                    status = COALESCE(?, status),
+                    updated_at = ?
+                WHERE workout_session_id = ?;
+            `,
+            input.sessionName?.trim() ?? null,
+            input.endTime?.trim() ?? null,
+            input.durationSeconds ?? null,
+            input.energyRating ?? null,
+            input.difficultyRating ?? null,
+            input.notes?.trim() ?? null,
+            input.status ?? null,
+            now,
+            input.id
+        );
+
+        const updatedRow = db.getFirstSync<WorkoutSessionRow>(
+            `
+                SELECT *
+                FROM workout_session
+                WHERE workout_session_id = ?;
+            `,
+            input.id
+        )
+
+        if (!updatedRow) {
+            throw new Error("Failed to update workout session");
+        }
+
+        return mapWorkoutSessionRow(updatedRow);
     },
+
     async complete(input) {
         throw new Error("Not Implemented");
     },
     async discard(id) {
-        throw new Error("Not Implemented");
+
+        const now = new Date().toISOString();
+
+        const result = db.runSync(
+            `
+                UPDATE workout_session
+                SET status = 'discarded',
+                    updated_at = ?
+                WHERE workout_session_id = ?
+                    AND status = 'in_progress';
+            `,
+            now,
+            id
+        );
+        
+        if(result.changes === 0) {
+            throw new Error("No in-progress session found to discard");
+        }
     },
+
     async hardDelete(id) {
         throw new Error("Not Implemented");
     },
     async findById(id) {
-        throw new Error("Not Implemented");
+        const result = db.getFirstSync<WorkoutSessionRow>(
+            `
+                SELECT *
+                FROM workout_session
+                WHERE workout_session_id = ?;
+            `,
+            id
+        );
+
+        if(!result) {
+            return null;
+        }
+
+        return mapWorkoutSessionRow(result);
     },
     async findInProgressByUserId(userId) {
-        throw new Error("Not Implemented");
+        const result = db.getFirstSync<WorkoutSessionRow>(
+            `
+                SELECT *
+                FROM workout_session
+                WHERE user_id = ?
+                    AND status = 'in_progress';
+            `,
+            userId
+        );
+
+        if(!result) {
+            return null;
+        }
+
+        return mapWorkoutSessionRow(result);
     },
     async listCompletedByUserId(userId) {
         throw new Error("Not Implemented");
