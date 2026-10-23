@@ -478,6 +478,10 @@ const createIndexesSql = /* sql */ `
     CREATE UNIQUE INDEX IF NOT EXISTS idx_plan_exercise_active_order
         ON plan_exercise(workout_plan_id, order_index)
         WHERE is_active = 1;
+
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_one_in_progress_session_per_user
+        ON workout_session(user_id)
+        WHERE status = 'in_progress';
 `;
 
 export function initializeDatabase() {
