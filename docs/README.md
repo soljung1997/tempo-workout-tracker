@@ -11,7 +11,6 @@ Tempo is a React Native Expo workout tracker with an offline-first local data la
 - `02-ux/flows.md`: Early UX flow notes
 - `03-architecture.md`: App architecture and foundation-layer decisions
 - `04-data-model.md`: Core data model, relationships, and schema notes
-- `05-chat-context.md`: Development context and useful project history
 - `modeling-guidelines.md`: Shared modeling conventions for entities, timestamps, deletion, and seed data
 - `database-smoke-verification.md`: Manual database initialization and seed verification result
 - `test-plan.md`: MVP testing strategy and verification checklist
