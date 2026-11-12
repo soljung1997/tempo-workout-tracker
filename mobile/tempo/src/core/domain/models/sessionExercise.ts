@@ -8,6 +8,10 @@ export type SessionExercise = {
     exerciseNameSnapshot: string;
     categoryNameSnapshot?: string;
     muscleGroupNameSnapshot?: string;
+    targetSets?: number;
+    targetReps?: number;
+    targetWeight?: number;
+    targetRestSeconds?: number;
     orderIndex: number;
     notes?: string;
     createdAt: string;

@@ -11,23 +11,6 @@ function normalizeName(name: string): string {
     return name.trim().toLowerCase();
 }
 
-function addWorkoutTypeIdToWorkoutPlanIfNeeded() {
-    const columns = db.getAllSync<{ name: string }>(
-        `PRAGMA table_info(workout_plan);`
-    );
-
-    const hasWorkoutTypeId = columns.some((column) => {
-        return column.name === "workout_type_id";
-    });
-
-    if (!hasWorkoutTypeId) {
-        db.execSync(`
-            ALTER TABLE workout_plan
-            ADD COLUMN workout_type_id INTEGER;
-        `);
-    }
-}
-
 function seedMvpUser() {
     const now = new Date().toISOString();
     
@@ -155,6 +138,10 @@ const createSessionExerciseTableSql = /* sql */ `
         exercise_name_snapshot TEXT NOT NULL,
         category_name_snapshot TEXT,
         muscle_group_name_snapshot TEXT,
+        target_sets INTEGER,
+        target_reps INTEGER,
+        target_weight REAL,
+        target_rest_seconds INTEGER,
         order_index INTEGER NOT NULL,
         notes TEXT,
         created_at TEXT NOT NULL,
@@ -231,6 +218,7 @@ const createWorkoutSessionTableSql = /* sql */ `
         workout_session_id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         workout_plan_id INTEGER,
+        planned_workout_id INTEGER,
         session_name TEXT NOT NULL,
         session_date TEXT NOT NULL,
         start_time TEXT NOT NULL,
@@ -239,13 +227,14 @@ const createWorkoutSessionTableSql = /* sql */ `
         energy_rating INTEGER CHECK (energy_rating IS NULL OR energy_rating BETWEEN 1 AND 5),
         difficulty_rating INTEGER CHECK (difficulty_rating IS NULL OR difficulty_rating BETWEEN 1 AND 5),
         notes TEXT,
-        status TEXT NOT NULL DEFAULT 'inProgress' CHECK (
-        status IN ('inProgress', 'completed', 'discarded')
+        status TEXT NOT NULL DEFAULT 'in_progress' CHECK (
+        status IN ('in_progress', 'completed', 'discarded')
         ),
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
 
         FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (planned_workout_id) REFERENCES planned_workout(planned_workout_id) ON DELETE SET NULL,
         FOREIGN KEY (workout_plan_id) REFERENCES workout_plan(workout_plan_id) ON DELETE SET NULL
     );
 `;
@@ -489,6 +478,10 @@ const createIndexesSql = /* sql */ `
     CREATE UNIQUE INDEX IF NOT EXISTS idx_plan_exercise_active_order
         ON plan_exercise(workout_plan_id, order_index)
         WHERE is_active = 1;
+
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_one_in_progress_session_per_user
+        ON workout_session(user_id)
+        WHERE status = 'in_progress';
 `;
 
 export function initializeDatabase() {
@@ -500,8 +493,6 @@ export function initializeDatabase() {
     db.execSync(createWorkoutTypeTableSql);
     db.execSync(createExerciseTableSql);
     db.execSync(createWorkoutPlanTableSql);
-
-    addWorkoutTypeIdToWorkoutPlanIfNeeded();
 
     db.execSync(createPlanExerciseTableSql);
     db.execSync(createWorkoutSessionTableSql);

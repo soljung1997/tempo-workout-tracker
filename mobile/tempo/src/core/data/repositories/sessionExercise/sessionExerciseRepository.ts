@@ -8,6 +8,10 @@ export type CreateSessionExerciseInput = {
     exerciseNameSnapshot: string;
     categoryNameSnapshot?: string;
     muscleGroupNameSnapshot?: string;
+    targetSets?: number;
+    targetReps?: number;
+    targetWeight?: number;
+    targetRestSeconds?: number;
     orderIndex: number;
     notes?: string;
 };
@@ -17,6 +21,10 @@ export type UpdateSessionExerciseInput = {
     exerciseNameSnapshot?: string;
     categoryNameSnapshot?: string;
     muscleGroupNameSnapshot?: string;
+    targetSets?: number;
+    targetReps?: number;
+    targetWeight?: number;
+    targetRestSeconds?: number;
     orderIndex?: number;
     notes?: string;
 };
