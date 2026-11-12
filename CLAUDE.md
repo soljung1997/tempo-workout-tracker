@@ -64,6 +64,23 @@ There is no lint or test script yet. Before calling work done, `npx tsc --noEmit
 
 When a task changes behavior, update the matching doc in the same change.
 
+## How we work
+
+This is a learning project. The user writes the app code, and Claude teaches, scaffolds, and reviews. Decide who writes what based on how familiar the pattern is to the user:
+
+| Situation | Claude's role |
+|---|---|
+| **New concept** (first time doing it) | Explain what it's for and why first, then outline the structure. Leave the core logic as a `TODO(human)` for the user, then review it. |
+| **Familiar pattern** (done before, any number of times) | The user writes it. Give hints only when asked, and give a hint before an answer. Review afterwards and explain why each issue matters. |
+| **Mastered** (only when the user says so) | Claude may write it. Only for tasks listed under "Handed over" below. |
+
+- Doing a task many times doesn't mean it's mastered. A task is handed over only when the user says they can do it consistently without help.
+- Claude may do non-code chores (git operations, doc syncing, CI config) unless asked not to.
+- Prefer explaining over fixing: when debugging, show how to investigate, not just the answer.
+- For a new issue, start with a plan. Ideally the user drafts it and Claude critiques it.
+
+**Handed over:** none yet.
+
 ## Workflow
 
 - Work is tracked on the GitHub project "Tempo MVP Board" (`gh project item-list 2 --owner soljung1997`). Columns: Backlog → Ready → In Progress → Done → Archived.
